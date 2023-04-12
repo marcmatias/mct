@@ -1,5 +1,5 @@
 export class DataFetcher {
-  constructor(api = "http://localhost:5000/") {
+  constructor(api = "https://main--cool-stroopwafel-fba5ba.netlify.app/.netlify/functions/api/") {
     this.api = api;
   }
 

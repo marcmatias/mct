@@ -6,6 +6,7 @@ export const map = {
     "n-select": naive.NSelect,
     "n-card": naive.NCard,
     "n-spin": naive.NSpin,
+    "n-button": naive.NButton,
   },
   setup() {
     const api = new DataFetcher();
@@ -18,6 +19,7 @@ export const map = {
     const valueYear = Vue.ref(null);
     const optionsYearDisabled = Vue.ref(false);
     const loading = Vue.ref(true);
+    const yearMapElement = Vue.ref(null);
 
     const queryMap = async (mapUrl) => {
       const svg = await fetch(mapUrl);
@@ -118,7 +120,17 @@ export const map = {
       valueYear.value = e;
       await setMap();
     }
-
+    const waitFor = (delay) => new Promise(resolve => setTimeout(resolve, delay));
+    const playMap = async () => {
+      for (let year of Vue.toRaw(optionsYear.value)) {
+        valueYear.value = year.value;
+        await setMap();
+        yearMapElement.value.innerText = valueYear.value;
+        yearMapElement.value.style.opacity = 1;
+        await waitFor(2000)
+      }
+      yearMapElement.value.style.opacity = 0;
+    }
     return {
       optionsAcronym,
       valueAcronym,
@@ -131,7 +143,9 @@ export const map = {
       handleUpdateValueSick,
       handleUpdateValueAcronym,
       handleUpdateValueYear,
-      loading
+      loading,
+      playMap,
+      yearMapElement
     };
   },
   template: `
@@ -164,10 +178,22 @@ export const map = {
             @update:value="handleUpdateValueYear"
             :disabled="optionsSicksDisabled"
           />
+          <n-button @click="playMap" title="Animação com os dados de todos os anos disponíveis no mapa">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-play-fill" viewBox="0 0 16 16">
+            <path
+              d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+          </svg>
+          </n-button>
         </div>
       </template>
-      <n-spin :show="loading" style="min-height: 537.6px;">
+      <n-spin :show="loading" style="min-height: 337.6px;">
         <div id="map"></div>
+        <div ref="yearMapElement" class="mct-canva-year"></div>
       </n-spin>
     </n-card>
   `

@@ -71,16 +71,7 @@ export class MapChart {
       const tooltip = self.element.querySelector(".mct-tooltip")
 
       path.addEventListener("mousemove", (event) => {
-        let compensateLeft = 60;
-        let compensateTop = 120;
-
-        if (window.innerWidth < "800") {
-          console.log("acessou")
-          compensateLeft = 10;
-          compensateTop = 200;
-        }
-        tooltip.style.left = event.clientX - compensateLeft + window.scrollX + "px";
-        tooltip.style.top = event.clientY - compensateTop + window.scrollY + "px";
+        self.tooltipPosition(event, tooltip);
       });
       path.addEventListener("mouseover", (event) => {
         path.style.transition = "all 0.3s";
@@ -92,8 +83,7 @@ export class MapChart {
           </article>`;
         path.style.opacity = "95%";
         tooltip.style.display = "block";
-        tooltip.style.left = event.clientX + 5 + window.scrollX + "px";
-        tooltip.style.top = event.clientY + 10 + window.scrollY + "px";
+        self.tooltipPosition(event, tooltip);
       });
       path.addEventListener("mouseleave", () => {
         path.style.fill = resultColor;
@@ -111,6 +101,17 @@ export class MapChart {
     }
   }
 
+  tooltipPosition(event, tooltip) {
+    let compensateLeft = 60;
+    let compensateTop = 200;
+
+    if (window.innerWidth < "800") {
+      compensateLeft = 10;
+      compensateTop = 350;
+    }
+    tooltip.style.left = event.clientX - compensateLeft + window.scrollX + "px";
+    tooltip.style.top = event.clientY - compensateTop + window.scrollY + "px";
+  }
   findElement(arr, name) {
     for (let i = 0; i < arr.length; i++) {
       const object = arr[i];
