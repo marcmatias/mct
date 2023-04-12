@@ -14,8 +14,10 @@ export const map = {
     const valueSick = Vue.ref(null);
     const optionsAcronym = Vue.ref(null);
     const valueAcronym = Vue.ref(null);
+    const optionsAcronymDisabled = Vue.ref(false);
     const optionsSicksDisabled = Vue.ref(false);
     const optionsYear = Vue.ref(null);
+    const buttonPlayDisabled = Vue.ref(null);
     const valueYear = Vue.ref(null);
     const optionsYearDisabled = Vue.ref(false);
     const loading = Vue.ref(true);
@@ -36,10 +38,10 @@ export const map = {
       loading.value = false;
     }
 
-    const setMap = async () => {
+    const setMap = async (enableFields = true) => {
       loading.value = true;
       const mapElement = document.querySelector('#map');
-      await setSicksOptions();
+      await setSicksOptions(enableFields);
       const acronym = valueAcronym.value;
       if (acronym == "BR") {
         const map =
@@ -56,6 +58,9 @@ export const map = {
       const map = await queryMap(
         `https://servicodados.ibge.gov.br/api/v3/malhas/estados/${acronym}?formato=image/svg+xml&qualidade=intermediaria&intrarregiao=municipio`
       );
+      if (!valueSick.value) {
+        return renderMap({ element: mapElement, map });
+      }
       try {
         const datasetCities = await api.requestState(acronym + "/" + valueSick.value);
         setYearsOptions(Object.keys(datasetCities).map(x => x).sort());
@@ -74,7 +79,7 @@ export const map = {
       valueAcronym.value = acronyms[0];
     }
 
-    const setSicksOptions = async () => {
+    const setSicksOptions = async (enableFields = true) => {
       let sicks = [];
       try {
         const acronym = valueAcronym.value;
@@ -83,11 +88,19 @@ export const map = {
         } else {
           sicks = await api.requestState(acronym + "/" + "options");
         }
-        optionsSicksDisabled.value = false;
+        if (enableFields) {
+          optionsSicksDisabled.value = false;
+          optionsYearDisabled.value = false;
+          buttonPlayDisabled.value = false;
+        }
         optionsSick.value = sicks.result.map((sick) =>  { return { label: sick, value: sick } } );
         valueSick.value = valueSick.value && sicks.result.includes(valueSick.value) ? valueSick.value : sicks.result[0];
       } catch {
         optionsSicksDisabled.value = true;
+        optionsYearDisabled.value = true;
+        buttonPlayDisabled.value = true;
+        valueSick.value = null;
+        valueYear.value = null;
       }
     }
 
@@ -120,20 +133,32 @@ export const map = {
       valueYear.value = e;
       await setMap();
     }
+
     const waitFor = (delay) => new Promise(resolve => setTimeout(resolve, delay));
+
     const playMap = async () => {
+      buttonPlayDisabled.value = true;
+      optionsYearDisabled.value = true;
+      optionsSicksDisabled.value = true;
+      optionsAcronymDisabled.value = true;
       for (let year of Vue.toRaw(optionsYear.value)) {
         valueYear.value = year.value;
-        await setMap();
+        await setMap(false);
         yearMapElement.value.innerText = valueYear.value;
         yearMapElement.value.style.opacity = 1;
         await waitFor(2000)
       }
       yearMapElement.value.style.opacity = 0;
+      buttonPlayDisabled.value = false;
+      optionsYearDisabled.value = false;
+      optionsSicksDisabled.value = false;
+      optionsAcronymDisabled.value = false;
     }
+
     return {
       optionsAcronym,
       valueAcronym,
+      optionsAcronymDisabled,
       optionsSick,
       optionsSicksDisabled,
       valueSick,
@@ -145,7 +170,8 @@ export const map = {
       handleUpdateValueYear,
       loading,
       playMap,
-      yearMapElement
+      yearMapElement,
+      buttonPlayDisabled
     };
   },
   template: `
@@ -168,6 +194,7 @@ export const map = {
             style="width: 70px"
             placeholder="Sigla"
             @update:value="handleUpdateValueAcronym"
+            :disabled="optionsAcronymDisabled"
           />
           <n-select
             v-model:value="valueYear"
@@ -176,9 +203,9 @@ export const map = {
             style="width: 80px"
             placeholder="Ano"
             @update:value="handleUpdateValueYear"
-            :disabled="optionsSicksDisabled"
+            :disabled="optionsYearDisabled"
           />
-          <n-button @click="playMap" title="Animação com os dados de todos os anos disponíveis no mapa">
+          <n-button :disabled="buttonPlayDisabled" @click="playMap" title="Animação com os dados de todos os anos disponíveis no mapa">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
