@@ -1,4 +1,5 @@
 import "./assets/css/style.css";
+
 import { createApp } from "vue/dist/vue.esm-bundler";
 import { chart } from "./components/chart";
 import { config } from "./components/config";

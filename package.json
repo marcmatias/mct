@@ -1,8 +1,9 @@
 {
-  "name": "map-chart-table",
+  "name": "dashboard",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "main": "dist/dashboard.js",
   "scripts": {
     "development": "run-p start dev",
     "dev": "vite --host",
