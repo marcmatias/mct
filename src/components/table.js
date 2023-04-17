@@ -1,23 +1,29 @@
 import { DataFetcher } from "../data-fetcher";
+import { ref, onMounted } from "vue/dist/vue.esm-bundler";
+import { NButton, NDataTable, NSelect } from "naive-ui";
 
 export const table = {
   components: {
-    "n-button": naive.NButton,
-    "n-data-table": naive.NDataTable,
-    "n-input": naive.NInput,
-    "n-input-group": naive.NInputGroup,
-    "n-select": naive.NSelect
+    NButton,
+    NDataTable,
+    NSelect
   },
-  setup() {
-    const loading = Vue.ref(true);
-    const api = new DataFetcher();
-    const rows =  Vue.ref([]);
-    const columns = Vue.ref([]);
-    const optionsSick = Vue.ref(null);
-    const valueSick = Vue.ref(null);
+  props: {
+    api: {
+      type: String,
+      required: true
+    },
+  },
+  setup(props) {
+    const loading = ref(true);
+    const api = new DataFetcher(props.api);
+    const rows =  ref([]);
+    const columns = ref([]);
+    const optionsSick = ref(null);
+    const valueSick = ref(null);
 
 
-    Vue.onMounted(async () => {
+    onMounted(async () => {
       loading.value = false;
 
       let sicks = [];
@@ -89,10 +95,10 @@ export const table = {
     };
   },
   template: `
-    <div>
+    <section>
       <div class="container-elements container-elements--table">
         <div class="container-elements__selects">
-          <n-select
+          <NSelect
             v-model:value="valueSick"
             filterable
             :options="optionsSick"
@@ -102,14 +108,14 @@ export const table = {
           />
         </div>
       </div>
-      <n-data-table
+      <NDataTable
         :columns="columns"
         :data="rows"
         :bordered="false"
         :loading="loading"
         :pagination="{ pageSlot:7 }"
         :scrollbar-props="{ trigger: 'none', xScrollable: true }"
-      ></n-data-table>
-    </div>
+      />
+    </section>
   `
 };

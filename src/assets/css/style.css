@@ -26,6 +26,7 @@ body {
   background-color: var(--body-bg);
   color: var(--body-color);
   min-height: 100vh;
+  margin: 0px;
 }
 
 /*
@@ -241,9 +242,6 @@ body {
   }
   .mct-canva {
     height: 70vw;
-  }
-  .mct-canva--chart {
-    height: 45vw;
   }
   .mct-legend {
     left: 0px;

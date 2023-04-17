@@ -1,7 +1,8 @@
+import { NConfigProvider, ptBR } from "naive-ui";
+
 export const config = {
   components:  {
-    "n-config-provider": naive.NConfigProvider,
-    "n-button": naive.NButton
+    NConfigProvider,
   },
   setup () {
     const lightThemeOverrides = {
@@ -13,16 +14,16 @@ export const config = {
 
     return {
       // Config-provider setup
-      ptBR: naive.ptBR,
+      ptBR: ptBR,
       lightThemeOverrides,
     }
   },
   template: `
-    <n-config-provider
+    <NConfigProvider
       :locale="ptBR"
       :theme-overrides="lightThemeOverrides"
     >
       <slot />
-    </n-config-provider>
+    </NConfigProvider>
   `,
 }

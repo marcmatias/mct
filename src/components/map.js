@@ -1,27 +1,35 @@
 import { DataFetcher } from "../data-fetcher";
 import { MapChart } from "../map-chart";
+import { ref, onMounted } from "vue/dist/vue.esm-bundler";
+import { NSelect, NCard, NSpin, NButton } from "naive-ui";
 
 export const map = {
   components: {
-    "n-select": naive.NSelect,
-    "n-card": naive.NCard,
-    "n-spin": naive.NSpin,
-    "n-button": naive.NButton,
+    NSelect,
+    NCard,
+    NSpin,
+    NButton,
   },
-  setup() {
-    const api = new DataFetcher();
-    const optionsSick = Vue.ref(null);
-    const valueSick = Vue.ref(null);
-    const optionsAcronym = Vue.ref(null);
-    const valueAcronym = Vue.ref(null);
-    const optionsAcronymDisabled = Vue.ref(false);
-    const optionsSicksDisabled = Vue.ref(false);
-    const optionsYear = Vue.ref(null);
-    const buttonPlayDisabled = Vue.ref(null);
-    const valueYear = Vue.ref(null);
-    const optionsYearDisabled = Vue.ref(false);
-    const loading = Vue.ref(true);
-    const yearMapElement = Vue.ref(null);
+  props: {
+    api: {
+      type: String,
+      required: true
+    },
+  },
+  setup(props) {
+    const api = new DataFetcher(props.api);
+    const optionsSick = ref(null);
+    const valueSick = ref(null);
+    const optionsAcronym = ref(null);
+    const valueAcronym = ref(null);
+    const optionsAcronymDisabled = ref(false);
+    const optionsSicksDisabled = ref(false);
+    const optionsYear = ref(null);
+    const buttonPlayDisabled = ref(null);
+    const valueYear = ref(null);
+    const optionsYearDisabled = ref(false);
+    const loading = ref(true);
+    const yearMapElement = ref(null);
 
     const queryMap = async (mapUrl) => {
       const svg = await fetch(mapUrl);
@@ -114,7 +122,7 @@ export const map = {
       }
     }
 
-    Vue.onMounted(async () => {
+    onMounted(async () => {
       await setAcronymOptions();
       await setSicksOptions();
       await setMap();
@@ -141,7 +149,7 @@ export const map = {
       optionsYearDisabled.value = true;
       optionsSicksDisabled.value = true;
       optionsAcronymDisabled.value = true;
-      for (let year of Vue.toRaw(optionsYear.value)) {
+      for (let year of toRaw(optionsYear.value)) {
         valueYear.value = year.value;
         await setMap(false);
         yearMapElement.value.innerText = valueYear.value;
@@ -175,10 +183,10 @@ export const map = {
     };
   },
   template: `
-    <n-card class="test" title="Mapa">
+    <NCard class="test" title="Mapa">
       <template #header-extra>
         <div class="container-input-card">
-          <n-select
+          <NSelect
             v-model:value="valueSick"
             filterable
             :options="optionsSick"
@@ -187,7 +195,7 @@ export const map = {
             @update:value="handleUpdateValueSick"
             :disabled="optionsSicksDisabled"
           />
-          <n-select
+          <NSelect
             v-model:value="valueAcronym"
             filterable
             :options="optionsAcronym"
@@ -196,7 +204,7 @@ export const map = {
             @update:value="handleUpdateValueAcronym"
             :disabled="optionsAcronymDisabled"
           />
-          <n-select
+          <NSelect
             v-model:value="valueYear"
             filterable
             :options="optionsYear"
@@ -205,23 +213,23 @@ export const map = {
             @update:value="handleUpdateValueYear"
             :disabled="optionsYearDisabled"
           />
-          <n-button :disabled="buttonPlayDisabled" @click="playMap" title="Animação com os dados de todos os anos disponíveis no mapa">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-play-fill" viewBox="0 0 16 16">
-            <path
-              d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
-          </svg>
-          </n-button>
+          <NButton :disabled="buttonPlayDisabled" @click="playMap" title="Animação com os dados de todos os anos disponíveis no mapa">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-play-fill" viewBox="0 0 16 16">
+              <path
+                d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+            </svg>
+          </NButton>
         </div>
       </template>
-      <n-spin :show="loading" style="min-height: 337.6px;">
+      <NSpin :show="loading" style="min-height: 337.6px;">
         <div id="map"></div>
         <div ref="yearMapElement" class="mct-canva-year"></div>
-      </n-spin>
-    </n-card>
+      </NSpin>
+    </NCard>
   `
 };

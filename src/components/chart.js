@@ -1,22 +1,33 @@
 import { DataFetcher } from "../data-fetcher";
+import { ref, onMounted } from "vue/dist/vue.esm-bundler";
 import { colors } from "../utils";
+import { NCard, NSelect, NEmpty } from "naive-ui";
+import { Chart, LineController, LineElement, PointElement, LinearScale, Tooltip, CategoryScale } from 'chartjs';
 
+// Registrar a escala "category"
+Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearScale, Tooltip);
 
 export const chart = {
   components: {
-    "n-card": naive.NCard,
-    "n-select": naive.NSelect,
-    "n-empty": naive.NEmpty
+    NCard,
+    NSelect,
+    NEmpty
   },
-  setup() {
-    const api = new DataFetcher();
-    const chartDefined = Vue.ref(true);
-    const optionsSick = Vue.ref(null);
-    const valueSick = Vue.ref(null);
-    const optionsAcronym = Vue.ref(null);
-    const valueAcronym = Vue.ref(null);
-    const optionsSicksDisabled = Vue.ref(false);
-    const chartElement = Vue.ref(null);
+  props: {
+    api: {
+      type: String,
+      required: true
+    },
+  },
+  setup(props) {
+    const api = new DataFetcher(props.api);
+    const chartDefined = ref(true);
+    const optionsSick = ref(null);
+    const valueSick = ref(null);
+    const optionsAcronym = ref(null);
+    const valueAcronym = ref(null);
+    const optionsSicksDisabled = ref(false);
+    const chartElement = ref(null);
 
     const setAcronymOptions = async () => {
       let acronyms = await api.request("statesAcronym");
@@ -60,14 +71,13 @@ export const chart = {
       const ctx = document.querySelector("#chart").getContext('2d');
       chart = new Chart(ctx, {
         type: 'line',
-        responsive: true,
-        maintainAspectRatio: false,
         data: {
           labels,
           datasets
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           scales: {
             x: {
               grid: {
@@ -117,7 +127,7 @@ export const chart = {
       });
     }
 
-    Vue.onMounted(async() => {
+    onMounted(async() => {
       await setAcronymOptions();
       await setSicksOptions(true);
       await setChartData();
@@ -240,12 +250,13 @@ export const chart = {
             style="width: 250px;"
             placeholder="Selecione doença"
             :disabled="optionsSicksDisabled"
+            max-tag-count="responsive"
             @update:value="handleUpdateValueSick"
           />
         </div>
       </template>
       <div class="mct-canva mct-canva--chart">
-        <canvas ref="chartElement" :class="chartDefined ? '' : 'element-hidden'" id="chart" class="mct-canva__chart"></canvas>
+        <canvas ref="chartElement" :class="chartDefined ? '' : 'element-hidden'" id="chart"></canvas>
         <n-empty :class="chartDefined ? 'element-hidden' : ''" style="justify-content: center"></n-empty>
       </div>
     </n-card>

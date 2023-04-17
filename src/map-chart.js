@@ -102,8 +102,8 @@ export class MapChart {
   }
 
   tooltipPosition(event, tooltip) {
-    let compensateLeft = 60;
-    let compensateTop = 200;
+    let compensateLeft = 90;
+    let compensateTop = 180;
 
     if (window.innerWidth < "800") {
       compensateLeft = 10;
