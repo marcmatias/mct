@@ -2,10 +2,10 @@ import { DataFetcher } from "../data-fetcher";
 import { ref, onMounted } from "vue/dist/vue.esm-bundler";
 import { colors } from "../utils";
 import { NCard, NSelect, NEmpty } from "naive-ui";
-import { Chart, LineController, LineElement, PointElement, LinearScale, Tooltip, CategoryScale } from 'chartjs';
+import { Chart, LineController, LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Legend } from 'chartjs';
 
 // Registrar a escala "category"
-Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearScale, Tooltip);
+Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearScale, Tooltip, Legend);
 
 export const chart = {
   components: {
@@ -96,6 +96,9 @@ export const chart = {
                 color: "rgba(127,127,127, .3)",
               },
               ticks: {
+                callback: function(value) {
+                  return value + " %";
+                },
                 color: "rgba(127,127,127, 1)",
                 padding: 20,
                 font: {
@@ -109,7 +112,7 @@ export const chart = {
               bottom: 20
             }
           },
-          plugins: { 
+          plugins: {
             legend: {
               display: true,
               position: "bottom",
@@ -137,13 +140,6 @@ export const chart = {
       valueSick.value = e;
       await setChartData();
     }
-    /*
-     * 
-     * Se for mais de uma doença
-     * 1. Pegar a quantidade máxima de anos (set)
-     * 2. Fazer o loop nos anos para cada doença e ir setando seus valores para o chartjs
-     *
-    */
     const setChartData = async () => {
       let results = [];
       const sicks = valueSick.value;
@@ -157,7 +153,7 @@ export const chart = {
       if (sicks.length === 1) {
         const color = colors[0];
         renderChart(
-          Object.keys(results),  
+          Object.keys(results),
           [
             {
               label: sicks,
@@ -210,7 +206,7 @@ export const chart = {
         });
       }
       renderChart(
-        years,  
+        years,
         data
       )
 
