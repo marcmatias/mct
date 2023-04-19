@@ -21,7 +21,8 @@ export const table = {
     const columns = ref([]);
     const optionsSick = ref(null);
     const valueSick = ref(null);
-
+    const optionsState = ref([null, 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'].map((state) =>  { return { label: state, value: state } } ));
+    const valueState = ref(null);
 
     onMounted(async () => {
       loading.value = false;
@@ -59,8 +60,21 @@ export const table = {
       }
     }
 
-    const convertObjectToArray = (obj) => {
+    const convertObjectToArray = (externalObj) => {
       const result = [];
+      let obj = externalObj;
+
+      const state = valueState.value;
+      if (state) {
+        const filteredData = {};
+        Object.keys(obj).forEach(year => {
+          const stateData = obj[year][state];
+          if (stateData) {
+            filteredData[year] = {[state]: stateData};
+          }
+        });
+        obj = filteredData;
+      }
 
       // Get the keys of the object and sort them in ascending order
       const years = Object.keys(obj).sort();
@@ -85,13 +99,21 @@ export const table = {
       await setTableData();
     }
 
+    const handleUpdateValueState = async (e) => {
+      valueState.value = e;
+      await setTableData();
+    }
+
     return {
       columns,
       loading,
       rows,
       handleUpdateValueSick,
       optionsSick,
-      valueSick
+      valueSick,
+      optionsState,
+      valueState,
+      handleUpdateValueState
     };
   },
   template: `
@@ -99,11 +121,21 @@ export const table = {
       <div class="container-elements container-elements--table">
         <div class="container-elements__selects">
           <NSelect
+            v-model:value="valueState"
+            filterable
+            :options="optionsState"
+            style="width: 100px"
+            placeholder="Estado"
+            @update:value="handleUpdateValueState"
+          />
+        </div>
+        <div class="container-elements__selects">
+          <NSelect
             v-model:value="valueSick"
             filterable
             :options="optionsSick"
             style="width: 200px"
-            placeholder="Selecione doença"
+            placeholder="Doença"
             @update:value="handleUpdateValueSick"
           />
         </div>

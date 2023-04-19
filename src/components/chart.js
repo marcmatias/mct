@@ -92,6 +92,8 @@ export const chart = {
               }
             },
             y: {
+              suggestedMin: 0,
+              suggestedMax: 100,
               grid: {
                 color: "rgba(127,127,127, .3)",
               },
