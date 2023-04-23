@@ -7,9 +7,9 @@ export const config = {
   setup () {
     const lightThemeOverrides = {
       common: {
-        primaryColor: "#2563eb",
-        primaryColorHover: "#1d4ed8"
-      }
+        primaryColor: "#e96f5f",
+        primaryColorHover: "#e96f5f",
+      },
     };
 
     return {

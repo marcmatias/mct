@@ -45,7 +45,7 @@ body {
 .main {
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 32px;
   padding: 25px 85px 60px;
 }
 
@@ -78,7 +78,58 @@ body {
 .element-hidden {
   display: none !important;
 }
-/* map styles */
+
+.select .n-base-selection-label {
+  background: #ececec;
+}
+
+.n-base-selection__border {
+  border: none;
+}
+
+.select .n-base-icon.n-base-suffix__arrow {
+  color: #e96f5f;
+}
+
+/* Label */
+.n-form-item.n-form-item--top-labelled .n-form-item-label {
+  align-items: center;
+  padding: 0px;
+}
+
+.n-form-item-label__text {
+  color: #827e7e;
+  font-size: .65rem;
+}
+
+/* Tabs */
+.n-tabs-nav .n-tabs-rail {
+  width: fit-content; 
+  border-top-left-radius: 22px;
+  border-bottom-left-radius: 22px;
+  border-top-right-radius: 22px;
+  border-bottom-right-radius: 22px;
+  background: #ececec;
+  padding: 0px;
+}
+
+.n-tabs-tab-wrapper .n-tabs-tab {
+  padding: 8px 24px;
+}
+
+.n-tabs-nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.n-tabs .n-tabs-rail .n-tabs-tab-wrapper .n-tabs-tab.n-tabs-tab--active {
+  background-color: #e96f5f;
+  transition: background-color 0.3s;
+  color: white;
+  border-radius: 22px;
+}
+
+/* Map styles */
 
 .mct-canva {
   width: 100%;
@@ -247,3 +298,4 @@ body {
     left: 0px;
   }
 }
+

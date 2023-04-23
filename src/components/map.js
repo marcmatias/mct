@@ -1,7 +1,7 @@
 import { DataFetcher } from "../data-fetcher";
 import { MapChart } from "../map-chart";
 import { ref, onMounted, toRaw } from "vue/dist/vue.esm-bundler";
-import { NSelect, NCard, NSpin, NButton } from "naive-ui";
+import { NSelect, NCard, NSpin, NButton, NFormItem } from "naive-ui";
 
 export const map = {
   components: {
@@ -9,6 +9,7 @@ export const map = {
     NCard,
     NSpin,
     NButton,
+    NFormItem,
   },
   props: {
     api: {
@@ -186,33 +187,42 @@ export const map = {
     <NCard class="test" title="Mapa">
       <template #header-extra>
         <div class="container-input-card">
-          <NSelect
-            v-model:value="valueSick"
-            filterable
-            :options="optionsSick"
-            style="width: 130px"
-            placeholder="Doença"
-            @update:value="handleUpdateValueSick"
-            :disabled="optionsSicksDisabled"
-          />
-          <NSelect
-            v-model:value="valueAcronym"
-            filterable
-            :options="optionsAcronym"
-            style="width: 70px"
-            placeholder="Sigla"
-            @update:value="handleUpdateValueAcronym"
-            :disabled="optionsAcronymDisabled"
-          />
-          <NSelect
-            v-model:value="valueYear"
-            filterable
-            :options="optionsYear"
-            style="width: 80px"
-            placeholder="Ano"
-            @update:value="handleUpdateValueYear"
-            :disabled="optionsYearDisabled"
-          />
+          <NFormItem label="Doença">
+            <NSelect
+              v-model:value="valueSick"
+              filterable
+              :options="optionsSick"
+              style="width: 130px"
+              placeholder="Doença"
+              @update:value="handleUpdateValueSick"
+              :disabled="optionsSicksDisabled"
+              class="select"
+            />
+          </NFormItem>
+          <NFormItem label="Lugar">
+            <NSelect
+              v-model:value="valueAcronym"
+              filterable
+              :options="optionsAcronym"
+              style="width: 70px"
+              placeholder="Sigla"
+              @update:value="handleUpdateValueAcronym"
+              :disabled="optionsAcronymDisabled"
+              class="select"
+            />
+          </NFormItem>
+          <NFormItem label="Ano">
+            <NSelect
+              v-model:value="valueYear"
+              filterable
+              :options="optionsYear"
+              style="width: 80px"
+              placeholder="Ano"
+              @update:value="handleUpdateValueYear"
+              :disabled="optionsYearDisabled"
+              class="select"
+            />
+          </NFormItem>
           <NButton :disabled="buttonPlayDisabled" @click="playMap" title="Animação com os dados de todos os anos disponíveis no mapa">
             <svg
               xmlns="http://www.w3.org/2000/svg"
