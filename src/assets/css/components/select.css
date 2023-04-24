@@ -1,0 +1,11 @@
+.select .n-base-selection-label {
+  background: var(--gray-color);
+}
+
+.select .n-base-selection__border {
+  border: 0px solid;
+}
+
+.select .n-base-icon.n-base-suffix__arrow {
+  color: var(--primary-color);
+}

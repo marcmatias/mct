@@ -118,29 +118,7 @@ export const table = {
   },
   template: `
     <section>
-      <div class="container-elements container-elements--table">
-        <div class="container-elements__selects">
-          <NSelect
-            v-model:value="valueState"
-            filterable
-            :options="optionsState"
-            style="width: 100px"
-            placeholder="Estado"
-            @update:value="handleUpdateValueState"
-          />
-        </div>
-        <div class="container-elements__selects">
-          <NSelect
-            v-model:value="valueSick"
-            filterable
-            :options="optionsSick"
-            style="width: 200px"
-            placeholder="Doença"
-            @update:value="handleUpdateValueSick"
-          />
-        </div>
-      </div>
-      <NDataTable
+      <n-data-table
         :columns="columns"
         :data="rows"
         :bordered="false"

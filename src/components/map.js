@@ -1,12 +1,11 @@
 import { DataFetcher } from "../data-fetcher";
 import { MapChart } from "../map-chart";
 import { ref, onMounted, toRaw } from "vue/dist/vue.esm-bundler";
-import { NSelect, NCard, NSpin, NButton, NFormItem } from "naive-ui";
+import { NSelect, NSpin, NButton, NFormItem } from "naive-ui";
 
 export const map = {
   components: {
     NSelect,
-    NCard,
     NSpin,
     NButton,
     NFormItem,
@@ -19,6 +18,7 @@ export const map = {
   },
   setup(props) {
     const api = new DataFetcher(props.api);
+    const map = ref(null);
     const optionsSick = ref(null);
     const valueSick = ref(null);
     const optionsAcronym = ref(null);
@@ -184,62 +184,11 @@ export const map = {
     };
   },
   template: `
-    <NCard class="test" title="Mapa">
-      <template #header-extra>
-        <div class="container-input-card">
-          <NFormItem label="Doença">
-            <NSelect
-              v-model:value="valueSick"
-              filterable
-              :options="optionsSick"
-              style="width: 130px"
-              placeholder="Doença"
-              @update:value="handleUpdateValueSick"
-              :disabled="optionsSicksDisabled"
-              class="select"
-            />
-          </NFormItem>
-          <NFormItem label="Lugar">
-            <NSelect
-              v-model:value="valueAcronym"
-              filterable
-              :options="optionsAcronym"
-              style="width: 70px"
-              placeholder="Sigla"
-              @update:value="handleUpdateValueAcronym"
-              :disabled="optionsAcronymDisabled"
-              class="select"
-            />
-          </NFormItem>
-          <NFormItem label="Ano">
-            <NSelect
-              v-model:value="valueYear"
-              filterable
-              :options="optionsYear"
-              style="width: 80px"
-              placeholder="Ano"
-              @update:value="handleUpdateValueYear"
-              :disabled="optionsYearDisabled"
-              class="select"
-            />
-          </NFormItem>
-          <NButton :disabled="buttonPlayDisabled" @click="playMap" title="Animação com os dados de todos os anos disponíveis no mapa">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-play-fill" viewBox="0 0 16 16">
-              <path
-                d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
-            </svg>
-          </NButton>
-        </div>
-      </template>
-      <NSpin :show="loading" style="min-height: 337.6px;">
-        <div id="map"></div>
+    <section>
+      <n-spin :show="loading" style="min-height: 337.6px;">
+        <div ref="map" id="map"></div>
         <div ref="yearMapElement" class="mct-canva-year"></div>
-      </NSpin>
-    </NCard>
+      </n-spin>
+    </section>
   `
 };

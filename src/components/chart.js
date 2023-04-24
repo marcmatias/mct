@@ -1,7 +1,7 @@
 import { DataFetcher } from "../data-fetcher";
 import { ref, onMounted } from "vue/dist/vue.esm-bundler";
 import { colors } from "../utils";
-import { NCard, NSelect, NEmpty } from "naive-ui";
+import { NSelect, NEmpty } from "naive-ui";
 import { Chart, LineController, LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Legend } from 'chartjs';
 
 // Registrar a escala "category"
@@ -9,7 +9,6 @@ Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearS
 
 export const chart = {
   components: {
-    NCard,
     NSelect,
     NEmpty
   },
@@ -231,32 +230,9 @@ export const chart = {
     };
   },
   template: `
-    <n-card class="test" title="Gráfico">
-      <template #header-extra>
-        <div class="container-input-card">
-          <n-select
-            v-model:value="valueAcronym"
-            :options="optionsAcronym"
-            style="width: 80px"
-            placeholder="Lugar"
-            @update:value="handleUpdateValueAcronym"
-          />
-          <n-select
-            v-model:value="valueSick"
-            multiple
-            :options="optionsSick"
-            style="width: 250px;"
-            placeholder="Selecione doença"
-            :disabled="optionsSicksDisabled"
-            max-tag-count="responsive"
-            @update:value="handleUpdateValueSick"
-          />
-        </div>
-      </template>
-      <div class="mct-canva mct-canva--chart">
-        <canvas ref="chartElement" :class="chartDefined ? '' : 'element-hidden'" id="chart"></canvas>
-        <n-empty :class="chartDefined ? 'element-hidden' : ''" style="justify-content: center"></n-empty>
-      </div>
-    </n-card>
+    <div class="mct-canva mct-canva--chart">
+      <canvas ref="chartElement" :class="chartDefined ? '' : 'element-hidden'" id="chart"></canvas>
+      <n-empty :class="chartDefined ? 'element-hidden' : ''" style="justify-content: center"></n-empty>
+    </div>
   `
 };

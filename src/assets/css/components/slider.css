@@ -1,0 +1,9 @@
+.n-slider-mark {
+  color: var(--label-color);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.n-slider .n-slider-marks .n-slider-mark {
+  transform: translateX(-50%) translateY(-20%);
+}
