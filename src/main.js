@@ -16,7 +16,7 @@ export default class Dashboard {
     const App = {
       components: { NTabs, NTabPane, NTab, Config, MainCard },
       setup() {
-        const tab = ref("map");
+        const tab = ref("chart");
         const handleUpdateValueTab = (tabName) => {
           tab.value = tabName;
         };

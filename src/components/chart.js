@@ -3,9 +3,10 @@ import { ref, onMounted } from "vue/dist/vue.esm-bundler";
 import { colors } from "../utils";
 import { NSelect, NEmpty } from "naive-ui";
 import { Chart, LineController, LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Legend } from 'chartjs';
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 // Registrar a escala "category"
-Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearScale, Tooltip, Legend);
+Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearScale, Tooltip, Legend, ChartDataLabels);
 
 export const chart = {
   components: {
@@ -79,9 +80,7 @@ export const chart = {
           maintainAspectRatio: false,
           scales: {
             x: {
-              grid: {
-                color: "rgba(127,127,127, .3)",
-              },
+              display: false,
               ticks: {
                 color: "rgba(127,127,127, 1)",
                 padding: 20,
@@ -93,8 +92,11 @@ export const chart = {
             y: {
               suggestedMin: 0,
               suggestedMax: 100,
+              border: {
+                display: false,
+              },
               grid: {
-                color: "rgba(127,127,127, .3)",
+                color: "rgba(127,127,127, .2)",
               },
               ticks: {
                 callback: function(value) {
@@ -115,16 +117,35 @@ export const chart = {
           },
           plugins: {
             legend: {
-              display: true,
-              position: "bottom",
-              onClick: null,
-              labels: {
-                color: "rgba(127,127,127, 1)",
-                font: {
-                  size: 13,
-                  weight: "bold",
+              display: false,
+            },
+            datalabels: {
+              formatter: function(value, context) {
+                if (context.dataIndex === context.dataset.data.length - 1) {
+                  return `${context.dataset.label}\n${value}%`;
+                } else {
+                  return null;
                 }
-              }
+              },
+              font: {
+                weight: 'bold'
+              },
+              align: 'end',
+              offset: 6,
+              borderWidth: 1,
+              borderColor: 'rgba(128, 128, 128, 0.3)',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              padding: 6,
+              borderRadius: 4,
+              textAlign: 'center',
+              color: function(context) {
+                return context.dataset.backgroundColor;
+              },
+            }
+          },
+          layout: {
+            padding: {
+              right: 40
             }
           },
         }
@@ -159,9 +180,9 @@ export const chart = {
             {
               label: sicks,
               data: Object.values(results).map(state => state[valueAcronym.value]) ,
-              backgroundColor: color + "80",
+              backgroundColor: color,
               borderColor: color,
-              borderWidth: 3,
+              borderWidth: 2,
             }
           ]
         )
@@ -201,9 +222,9 @@ export const chart = {
         data.push({
           label: key,
           data: value,
-          backgroundColor: color + "80",
+          backgroundColor: color,
           borderColor: color,
-          borderWidth: 3,
+          borderWidth: 2,
         });
       }
       renderChart(

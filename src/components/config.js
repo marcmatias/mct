@@ -10,8 +10,14 @@ export const config = {
         primaryColor: "#e96f5f",
         primaryColorHover: "#e96f5f",
       },
+      DataTable: {
+        thColorHover: "#e96f5f",
+        thColor: "#ececec",
+        tdColorStriped: "#ececec",
+        thFontWeight:  "500",
+        thIconColor: "#e96f5f",
+      }
     };
-
     return {
       // Config-provider setup
       ptBR: ptBR,

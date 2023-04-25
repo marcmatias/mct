@@ -119,6 +119,7 @@ export const table = {
   template: `
     <section>
       <n-data-table
+        striped
         :columns="columns"
         :data="rows"
         :bordered="false"
