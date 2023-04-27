@@ -16,14 +16,14 @@ export default class Dashboard {
     const App = {
       components: { NTabs, NTabPane, NTab, Config, MainCard },
       setup() {
-        const tab = ref("chart");
+        const tab = ref("map");
         const handleUpdateValueTab = (tabName) => {
           tab.value = tabName;
         };
         const handleUpdateValueTabBy = (tabName) => {
           console.log(tabName);
         };
-        return { 
+        return {
           tab,
           api: self.api,
           handleUpdateValueTab,
@@ -43,7 +43,7 @@ export default class Dashboard {
               </div>
               <div style="display: flex;  align-items: center; gap: 14px">
                 <span>exibir como</span>
-                <n-tabs type="segment" @update:value="handleUpdateValueTab">
+                <n-tabs :value="tab" type="segment" @update:value="handleUpdateValueTab">
                   <n-tab name="map" tab="Mapa" />
                   <n-tab name="chart" tab="Gráfico"/>
                   <n-tab name="table" tab="Tabela"/>

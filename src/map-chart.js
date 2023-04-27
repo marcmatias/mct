@@ -63,7 +63,7 @@ export class MapChart {
       const dataset = self.findElement(datasetStates, content);
 
       if (!dataset || !dataset.data[row]) {
-        path.style.fill = "#c7c7c7";
+        path.style.fill = "#e9e9e9";
         continue;
       }
       const result = dataset.data[row];
@@ -102,8 +102,8 @@ export class MapChart {
   }
 
   tooltipPosition(event, tooltip) {
-    let compensateLeft = 90;
-    let compensateTop = 180;
+    let compensateLeft = 100;
+    let compensateTop = 250;
 
     if (window.innerWidth < "800") {
       compensateLeft = 10;
@@ -193,32 +193,26 @@ export class MapChart {
   getColor(percentage) {
     const self = this;
 
-    if (percentage < 20) {
-      // First range: from 0 to 19
+    if (percentage < 40) {
+      // First range: from 0 to 39
       const initialColor = [178, 203, 176];
-      const finalColor = [116, 177, 182];
-      const intervalPercentage = percentage / 20;
-      return self.interpolateColors(initialColor, finalColor, intervalPercentage);
-    } else if (percentage < 40) {
-      // Second range: from 20 to 39
-      const initialColor = [116, 177, 182];
       const finalColor = [43, 115, 177];
-      const intervalPercentage = (percentage - 20) / 20;
+      const intervalPercentage = percentage / 40;
       return self.interpolateColors(initialColor, finalColor, intervalPercentage);
     } else if (percentage < 60) {
-      // Third range: from 40 to 59
+      // Second range: from 40 to 59
       const initialColor = [43, 115, 177];
       const finalColor = [23, 93, 137];
       const intervalPercentage = (percentage - 40) / 20;
       return self.interpolateColors(initialColor, finalColor, intervalPercentage);
     } else if (percentage < 80) {
-      // Fourth range: from 60 to 79
+      // Third range: from 60 to 79
       const initialColor = [23, 93, 137];
       const finalColor = [47, 56, 126];
       const intervalPercentage = (percentage - 60) / 20;
       return self.interpolateColors(initialColor, finalColor, intervalPercentage);
     } else {
-      // Fifth range: from 80 to 100
+      // Fourth range: from 80 to 100
       const initialColor = [47, 56, 126];
       const finalColor = [13, 0, 161];
       const intervalPercentage = (percentage - 80) / 20;

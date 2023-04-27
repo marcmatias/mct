@@ -131,11 +131,8 @@ export const chart = {
                 weight: 'bold'
               },
               align: 'end',
-              offset: 6,
-              borderWidth: 1,
-              borderColor: 'rgba(128, 128, 128, 0.3)',
+              offset: 4,
               backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              padding: 6,
               borderRadius: 4,
               textAlign: 'center',
               color: function(context) {
