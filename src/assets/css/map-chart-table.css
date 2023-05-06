@@ -39,7 +39,7 @@
 .mct-legend {
   position: absolute;
   bottom: 0px;
-  left: 70px;
+  right: 0px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -48,15 +48,14 @@
 }
 
 .mct-legend__gradient {
-  width: 20px;
-  height: 120px;
+  width: 151px;
+  height: 10px;
   background: linear-gradient(
-    180deg,
-    rgb(13, 0, 161),
-    rgb(47, 56, 126),
-    rgb(23, 93, 137),
-    rgb(43, 115, 177),
-    rgb(116, 177, 182)
+    90deg,
+    rgb(167, 97, 0),
+    rgb(250, 213, 137),
+    rgb(209, 218, 246),
+    rgb(22, 45, 102)
   );
   border-radius: .25rem;
   box-shadow: 0 0 2px white, 0 0 2px white, 0 0 2px white, 0 0 2px white;
@@ -64,26 +63,12 @@
 
 .mct-legend__content {
   display: flex;
-  flex-direction: column;
+  gap: 42px;
   justify-content: space-between;
   padding: 4px 0px;
-  font-weight: 600;
-  font-size: .70rem;
-  text-shadow: var(--text-shadow);
-}
-
-.mct-legend-text {
-  font-weight: 600;
   font-size: .6rem;
-  width: 150px;
-  padding-top: 4px;
-  line-height: 1.4;
-}
-
-.mct-legend-source {
-  font-weight: 600;
-  font-size: .55rem;
-  width: 150px;
+  text-shadow: var(--text-shadow);
+  color: #1E1E1E;
 }
 
 /* Tooltip map */
@@ -99,6 +84,7 @@
   z-index: 1;
   user-select: none;
   pointer-events: none;
+  min-width: max-content;
 }
 
 .mct-tooltip__title {
@@ -116,21 +102,7 @@
 /* MediaQuery */
 
 @media (max-width: 800px) {
-  .main {
-    padding: 15px 12px;
-  }
-  .container-elements--table {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .container-input-card {
-    flex-direction: column;
-  }
   .mct-canva {
     height: 70vw;
-  }
-  .mct-legend {
-    left: 0px;
   }
 }

@@ -1,0 +1,32 @@
+.main-card-footer {
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  margin-bottom: 12px;
+}
+
+.main-card-footer__legend {
+  color:gray;
+  font-size:14px;
+  font-weight: 400;
+}
+
+.main-card-footer__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* MediaQuery */
+
+@media (max-width: 900px) {
+  .main-card-footer {
+    flex-direction: column;
+  }
+  .main-card-footer__buttons {
+    justify-items: start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+

@@ -33,16 +33,13 @@ export default class Dashboard {
       template: `
         <Config>
           <main class="main">
-            <section style="display:flex; justify-content:space-between">
-              <div style="display: flex; align-items: center; gap: 32px">
-                <h1 style="margin:0px; color: #e96f5f">Vacinas</h1>
-                <n-tabs type="line" @update:value="handleUpdateValueTabBy">
+            <section class="main-header">
+              <h1 style="margin:0px; color: #e96f5f">Vacinas</h1>
+              <div style="display:flex; gap: 32px; overflow: auto">
+                <n-tabs type="segment" @update:value="handleUpdateValueTabBy">
                   <n-tab name="bySick" tab="Por doença" />
                   <n-tab name="byImmunizing" tab="Imunizante" />
                 </n-tabs>
-              </div>
-              <div style="display: flex;  align-items: center; gap: 14px">
-                <span>exibir como</span>
                 <n-tabs :value="tab" type="segment" @update:value="handleUpdateValueTab">
                   <n-tab name="map" tab="Mapa" />
                   <n-tab name="chart" tab="Gráfico"/>
@@ -50,7 +47,9 @@ export default class Dashboard {
                 </n-tabs>
               </div>
             </section>
-            <MainCard :tab="tab" :api='api' />
+            <div>
+              <MainCard :tab="tab" :api='api' />
+            </div>
           </main>
         </Config>
       `,

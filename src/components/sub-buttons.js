@@ -22,14 +22,12 @@ export const subButtons = {
   props: {
     api: {
       type: String,
-      required: true
-
     },
   },
   template: `
-    <section style="display:flex; justify-content: space-between; align-items:center; margin-top: 18px; margin-bottom: 12px">
-      <span style="color:gray; font-size:14px; font-weight: 400">Fonte: Programa Nacional de imunização (PNI), disponibilizadas no TabNet-DATASUS</span>
-      <div style="display: flex; gap: 8px;">
+    <section class="main-card-footer">
+      <span class="main-card-footer__legend">Fonte: Programa Nacional de imunização (PNI), disponibilizadas no TabNet-DATASUS</span>
+      <div class="main-card-footer__buttons">
         <n-button quaternary type="primary" style="font-weight: 500">
         <template #icon>
           <n-icon>

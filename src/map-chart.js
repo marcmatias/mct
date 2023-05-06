@@ -7,8 +7,6 @@ export class MapChart {
     cities,
     datasetStates,
     states,
-    legendTitle,
-    legendSource
   }) {
     this.element = typeof element === "string" ?
       element.querySelector(element) : element;
@@ -17,8 +15,6 @@ export class MapChart {
     this.cities = cities;
     this.datasetStates = datasetStates;
     this.states = states;
-    this.legendTitle = legendTitle;
-    this.legendSource = legendSource;
 
     this.init();
   }
@@ -41,6 +37,10 @@ export class MapChart {
 
     const svgContainer = self.element.querySelector("#canvas");
     svgContainer.innerHTML = map;
+    for (const path of svgContainer.querySelectorAll('path')) {
+      path.style.stroke = "white";
+      path.setAttribute("stroke-width", "800px");
+    }
 
     const svgElement = svgContainer.querySelector("svg");
     svgElement.style.maxWidth = "100%";
@@ -51,7 +51,6 @@ export class MapChart {
 
   setData(
     {
-      row = 0,
       datasetStates,
       contentData
     } = {}
@@ -62,43 +61,37 @@ export class MapChart {
       const content = contentData ? contentData[path.id] : [];
       const dataset = self.findElement(datasetStates, content);
 
-      if (!dataset || !dataset.data[row]) {
+      if (!dataset || !dataset.data) {
         path.style.fill = "#e9e9e9";
         continue;
       }
-      const result = dataset.data[row];
-      const resultColor = self.getColor(result);
+      const result = dataset.data;
+      const resultColor = dataset.color;
       const tooltip = self.element.querySelector(".mct-tooltip")
 
       path.addEventListener("mousemove", (event) => {
         self.tooltipPosition(event, tooltip);
       });
       path.addEventListener("mouseover", (event) => {
-        path.style.transition = "all 0.3s";
-        path.style.fill = "gold";
+        const parentElement = path.parentNode;
+        parentElement.appendChild(path);
+        path.style.stroke = "blue";
         tooltip.innerHTML = `
           <article>
             <div class="mct-tooltip__title">${content.name}</div>
             <div class="mct-tooltip__result">${result + " %"}</div>
           </article>`;
-        path.style.opacity = "95%";
         tooltip.style.display = "block";
         self.tooltipPosition(event, tooltip);
       });
       path.addEventListener("mouseleave", () => {
         path.style.fill = resultColor;
+        path.style.stroke = "white";
         tooltip.style.display = "none";
       });
 
       path.style.fill = resultColor;
     };
-
-    if (self.legendTitle) {
-      self.element.querySelector(".mct-legend-text").innerHTML = self.legendTitle;
-    }
-    if (self.legendSource) {
-      self.element.querySelector(".mct-legend-source").innerHTML = "Fonte: " + self.legendSource;
-    }
   }
 
   tooltipPosition(event, tooltip) {
@@ -109,9 +102,29 @@ export class MapChart {
       compensateLeft = 10;
       compensateTop = 350;
     }
-    tooltip.style.left = event.clientX - compensateLeft + window.scrollX + "px";
-    tooltip.style.top = event.clientY - compensateTop + window.scrollY + "px";
+
+    let tooltipLeft = event.clientX - compensateLeft + window.scrollX;
+    let tooltipTop = event.clientY - compensateTop + window.scrollY;
+
+    let tooltipWidth = tooltip.offsetWidth + 40;
+    let tooltipHeight = tooltip.offsetHeight + 40;
+    let windowWidth = window.innerWidth;
+    let windowHeight = window.innerHeight;
+
+    let tooltipOutsideRight = tooltipLeft + tooltipWidth > windowWidth;
+    let tooltipOutsideBottom = tooltipTop + tooltipHeight > windowHeight;
+
+    if (tooltipOutsideRight) {
+      tooltipLeft = event.clientX - tooltipWidth - "60" + window.scrollX;
+    }
+    if (tooltipOutsideBottom) {
+      tooltipTop = event.clientY - tooltipHeight - "60" + window.scrollY;
+    }
+
+    tooltip.style.left = tooltipLeft + "px";
+    tooltip.style.top = tooltipTop + "px";
   }
+
   findElement(arr, name) {
     for (let i = 0; i < arr.length; i++) {
       const object = arr[i];
@@ -151,10 +164,13 @@ export class MapChart {
           {
             return {
               label: key,
-              data: [val]
+              data: val,
+              name: Object.values(self.cities).find(item => item.acronym === key).name,
+              color: self.getColor(val),
             }
           }
         );
+      self.datasetValues = result;
     }
 
     self.applyMap(self.map);
@@ -177,10 +193,13 @@ export class MapChart {
           {
             return {
               label: key,
-              data: [val]
+              data: val,
+              name: Object.values(self.states).find(item => item.acronym === key).name,
+              color: self.getColor(val),
             }
           }
         );
+      self.datasetValues = result;
     }
 
     self.applyMap(self.map);
@@ -191,33 +210,31 @@ export class MapChart {
   }
 
   getColor(percentage) {
-    const self = this;
+    const colors = [
+      { r: 167, g: 97, b: 0 },
+      { r: 250, g: 213, b: 137 },
+      { r: 209, g: 218, b: 246 },
+      { r: 22, g: 45, b: 102 }
+    ];
 
-    if (percentage < 40) {
-      // First range: from 0 to 39
-      const initialColor = [178, 203, 176];
-      const finalColor = [43, 115, 177];
-      const intervalPercentage = percentage / 40;
-      return self.interpolateColors(initialColor, finalColor, intervalPercentage);
-    } else if (percentage < 60) {
-      // Second range: from 40 to 59
-      const initialColor = [43, 115, 177];
-      const finalColor = [23, 93, 137];
-      const intervalPercentage = (percentage - 40) / 20;
-      return self.interpolateColors(initialColor, finalColor, intervalPercentage);
-    } else if (percentage < 80) {
-      // Third range: from 60 to 79
-      const initialColor = [23, 93, 137];
-      const finalColor = [47, 56, 126];
-      const intervalPercentage = (percentage - 60) / 20;
-      return self.interpolateColors(initialColor, finalColor, intervalPercentage);
-    } else {
-      // Fourth range: from 80 to 100
-      const initialColor = [47, 56, 126];
-      const finalColor = [13, 0, 161];
-      const intervalPercentage = (percentage - 80) / 20;
-      return self.interpolateColors(initialColor, finalColor, intervalPercentage);
+    if (percentage < 0) {
+      percentage = 0;
+    } else if (percentage > 100) {
+      percentage = 100;
     }
+
+    const index = Math.floor((percentage / 100) * (colors.length - 1));
+
+    const lowerColor = colors[index];
+    const upperColor = index < 3 ? colors[index + 1] : colors[index];
+    const factor = (percentage / 100) * (colors.length - 1) - index;
+    const interpolatedColor = {
+      r: Math.round(lowerColor.r + (upperColor.r - lowerColor.r) * factor),
+      g: Math.round(lowerColor.g + (upperColor.g - lowerColor.g) * factor),
+      b: Math.round(lowerColor.b + (upperColor.b - lowerColor.b) * factor)
+    };
+
+    return `rgb(${interpolatedColor.r}, ${interpolatedColor.g}, ${interpolatedColor.b})`;
   }
 
   interpolateColors(initialColor, finalColor, intervalPercentage) {
@@ -239,16 +256,14 @@ export class MapChart {
           </div>
         </div>
         <div class="mct-legend">
-          <div style="display:flex; gap: 4px;">
-            <div class="mct-legend__gradient"></div>
+          <div style="display:flex; flex-direction: column; gap: 4px;">
             <div class="mct-legend__content">
-              <div class="mct-legend-top">100%</div>
-              <div class="mct-legend-middle">50%</div>
               <div class="mct-legend-base">0%</div>
+              <div class="mct-legend-middle">50%</div>
+              <div class="mct-legend-top">100%</div>
             </div>
+            <div class="mct-legend__gradient"></div>
           </div>
-          <div class="mct-legend-text"></div>
-          <div class="mct-legend-source"></div>
         </div>
       </section>
       <div class="mct-tooltip"></div>

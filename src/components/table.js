@@ -45,7 +45,8 @@ export const table = {
           {
             title: column.charAt(0).toUpperCase() + column.slice(1),
             key: column,
-            sorter: 'default'
+            sorter: 'default',
+            width: 200,
           }
         )
       }

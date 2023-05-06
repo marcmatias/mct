@@ -13,16 +13,18 @@ export const subSelect = {
     },
   },
   setup() {
-    const sicks = ref({ label: 'Poliomielite', value: 'Poliomielite' });
-    const sick = ref('Poliomielite');
-    const types = ref({ label: 'Cobertura Vacinal', value: 'Cobertura Vacinal' });
-    const type = ref('Cobertura Vacinal');
-    const locals = ref({ label: 'Estados', value: 'BR' });
-    const local = ref('BR');
-    const periods = ref({ label: 'Todos os Anos', value: 'Todos os Anos' });
-    const period = ref('Todos os Anos');
+    const sicks = ref([{ label: 'Poliomielite', value: 'Poliomielite' }]);
+    const sick = ref(null);
+    const types = ref([{ label: 'Cobertura Vacinal', value: 'Cobertura Vacinal' }]);
+    const type = ref(null);
+    const locals = ref([{ label: 'Estados', value: 'BR' }]);
+    const local = ref(null);
+    const periods = ref([{ label: 'Todos os Anos', value: 'Todos os Anos' }]);
+    const period = ref(null);
+    const granuralities = ref([{ label: 'Estados', value: 'Estados' }]);
+    const granurality = ref(null);
 
-    return { 
+    return {
       sicks,
       sick,
       type,
@@ -30,7 +32,9 @@ export const subSelect = {
       local,
       locals,
       period,
-      periods
+      periods,
+      granurality,
+      granuralities,
     };
   },
   template: `
@@ -39,32 +43,45 @@ export const subSelect = {
         <n-select
           :value="sick"
           :options="sicks"
-          class="select" 
+          class="select"
           style="width: 200px"
+          placeholder="Selecione doença"
         />
       </n-form-item>
       <n-form-item label="Tipo de dado">
         <n-select
           :value="type"
           :options="types"
-          class="select" 
+          class="select"
           style="width: 200px"
+          placeholder="Selecione Tipo de dado"
         />
       </n-form-item>
-      <n-form-item label="Cobertura geográfica">
+      <n-form-item label="Estados">
         <n-select
           :value="local"
           :options="locals"
-          class="select" 
+          class="select"
           style="width: 200px"
+          placeholder="Selecione Estado"
         />
       </n-form-item>
-      <n-form-item label="Período disponível">
+      <n-form-item label="Abrangência temporal">
         <n-select
           :value="period"
           :options="periods"
-          class="select" 
+          class="select"
           style="width: 200px"
+          placeholder="Selecione Abrangência"
+        />
+      </n-form-item>
+      <n-form-item label="Grânularidade">
+        <n-select
+          :value="granurality"
+          :options="granuralities"
+          class="select"
+          style="width: 200px"
+          placeholder="Selecione Grânularidade"
         />
       </n-form-item>
     </section>

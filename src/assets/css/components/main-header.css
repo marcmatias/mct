@@ -1,0 +1,11 @@
+.main-header {
+  display:flex;
+  justify-content:space-between;
+  gap: 12px;
+}
+
+@media (max-width: 800px) {
+  .main-header {
+    flex-direction: column;
+  }
+}

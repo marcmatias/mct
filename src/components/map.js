@@ -16,9 +16,8 @@ export const map = {
       required: true
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const api = new DataFetcher(props.api);
-    const map = ref(null);
     const optionsSick = ref(null);
     const valueSick = ref(null);
     const optionsAcronym = ref(null);
@@ -39,12 +38,13 @@ export const map = {
     };
 
     const renderMap = (args) => {
-      new MapChart({
+      const mapChart = new MapChart({
         ...args,
         legendTitle: "Porcentagem de contaminação da população brasileira.",
         legendSource: "IBGE 2023"
       });
       loading.value = false;
+      emit("mapChange", mapChart.datasetValues);
     }
 
     const setMap = async (enableFields = true) => {

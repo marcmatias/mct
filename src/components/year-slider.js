@@ -9,12 +9,7 @@ export const yearSlider = {
     NButton,
     NIconWrapper
   },
-  props: {
-    api: {
-      type: String,
-      required: true
-    },
-  },
+  props: {},
   setup () {
     return {
       value: ref(0),
