@@ -121,6 +121,7 @@ export const table = {
     <section>
       <n-data-table
         striped
+        class="table-custom"
         :columns="columns"
         :data="rows"
         :bordered="false"

@@ -185,7 +185,7 @@ export const map = {
   },
   template: `
     <section>
-      <n-spin :show="loading" style="min-height: 337.6px;">
+      <n-spin :show="loading" class="map-container">
         <div ref="map" id="map"></div>
         <div ref="yearMapElement" class="mct-canva-year"></div>
       </n-spin>

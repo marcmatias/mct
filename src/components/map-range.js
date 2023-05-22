@@ -15,8 +15,19 @@ export const mapRange = {
     const handleMapChange = (data) => {
       const svg = document.querySelector('#mapRangeSVG');
       if(!data.length || !svg) { return; }
+
       svg.setAttribute("height", 0);
       svg.setAttribute("height", svg.parentNode.offsetHeight - 70);
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+      line.setAttribute("x1",20);
+      line.setAttribute("y1", 0);
+      line.setAttribute("x2", 20);
+      line.setAttribute("y2", "100%");
+      line.setAttribute("stroke", "gray");
+      line.setAttribute("stroke-width", "0.6");
+      svg.appendChild(line);
+
       const circles = document.querySelectorAll("circle");
       circles.forEach(circle => circle.parentNode.removeChild(circle));
       const svgHeight = svg.getAttribute("height");
@@ -96,9 +107,7 @@ export const mapRange = {
       content-style="padding: 0px; display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 12px;"
     >
       <span style="padding: 12px 0px 0px">100%</span>
-      <svg id="mapRangeSVG" width="40" style="overflow: visible">
-        <line x1="20" y1="0" x2="20" y2="100%" stroke="gray" stroke-width="0.6"></line>
-      </svg>
+      <svg id="mapRangeSVG" width="40" style="overflow: visible"></svg>
       <span style="padding: 0px 0px 12px">0%</span>
     </n-card>
     <div class="tooltip mct-tooltip"></div>

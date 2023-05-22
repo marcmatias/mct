@@ -13,7 +13,12 @@ export const subSelect = {
     },
   },
   setup() {
-    const sicks = ref([{ label: 'Poliomielite', value: 'Poliomielite' }]);
+    const sicks = ref(
+      [
+        { label: 'Poliomielite', value: 'Poliomielite' },
+        { label: 'COVID-19', value: 'COVID-19' },
+      ]
+    );
     const sick = ref(null);
     const types = ref([{ label: 'Cobertura Vacinal', value: 'Cobertura Vacinal' }]);
     const type = ref(null);
@@ -41,7 +46,7 @@ export const subSelect = {
     <section style="display:flex; gap: 14px">
       <n-form-item label="Doença">
         <n-select
-          :value="sick"
+          v-model:value="sick"
           :options="sicks"
           class="select"
           style="width: 200px"
@@ -50,7 +55,7 @@ export const subSelect = {
       </n-form-item>
       <n-form-item label="Tipo de dado">
         <n-select
-          :value="type"
+          v-model:value="type"
           :options="types"
           class="select"
           style="width: 200px"
@@ -59,7 +64,7 @@ export const subSelect = {
       </n-form-item>
       <n-form-item label="Estados">
         <n-select
-          :value="local"
+          v-model:value="local"
           :options="locals"
           class="select"
           style="width: 200px"
@@ -68,7 +73,7 @@ export const subSelect = {
       </n-form-item>
       <n-form-item label="Abrangência temporal">
         <n-select
-          :value="period"
+          v-model:value="period"
           :options="periods"
           class="select"
           style="width: 200px"
@@ -77,7 +82,7 @@ export const subSelect = {
       </n-form-item>
       <n-form-item label="Grânularidade">
         <n-select
-          :value="granurality"
+          v-model:value="granurality"
           :options="granuralities"
           class="select"
           style="width: 200px"

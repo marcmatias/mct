@@ -16,6 +16,9 @@ export const config = {
         tdColorStriped: "#ececec",
         thFontWeight:  "500",
         thIconColor: "#e96f5f",
+      },
+      Slider: {
+        indicatorColor: "#e96f5f"
       }
     };
     return {

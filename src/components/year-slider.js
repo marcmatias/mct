@@ -13,17 +13,12 @@ export const yearSlider = {
   setup () {
     return {
       value: ref(0),
-      marks: {
-        0: '2019',
-        25: '2020',
-        50: '2021',
-        75: '2022',
-        100: '2023'
-      }
+      min: ref(2019),
+      max: ref(2023)
     }
   },
   template: `
-    <section style="display: flex; gap: 14px; margin-top: 24px">
+    <section style="display: flex; gap: 14px; margin-top: 24px; align-items: center;">
       <n-button type="primary" circle>
         <template #icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
@@ -31,12 +26,14 @@ export const yearSlider = {
           </svg>
         </template>
       </n-button>
-      <n-slider v-model:value="value" :marks="marks" step="mark" :tooltip="false">
+      <span style="white-space:nowrap; padding: 0px 6px; font-size: 14px">{{ min }}</span>
+      <n-slider v-model:value="value" :min="min" :max="max" :tooltip="true">
         <template #thumb>
           <n-icon-wrapper :size="12" :border-radius="12">
           </n-icon-wrapper>
         </template>
       </n-slider>
+      <span style="white-space:nowrap; padding: 0px 6px; font-size: 14px">{{ max }}</span>
     </section>
   `,
 }

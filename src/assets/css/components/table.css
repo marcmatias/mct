@@ -48,3 +48,16 @@
   font-weight: 500;
 }
 
+.table-custom .n-data-table__pagination {
+  justify-content: flex-start;
+}
+
+
+/* MediaQuery */
+
+@media (max-width: 800px) {
+  .table-custom .n-pagination {
+    justify-content: space-between;
+    min-width: 100%;
+  }
+}
