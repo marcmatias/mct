@@ -24,7 +24,7 @@ export const mapRange = {
       line.setAttribute("y1", 0);
       line.setAttribute("x2", 20);
       line.setAttribute("y2", "100%");
-      line.setAttribute("stroke", "gray");
+      line.setAttribute("stroke", "#ccc");
       line.setAttribute("stroke-width", "0.6");
       svg.appendChild(line);
 

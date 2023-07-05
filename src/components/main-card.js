@@ -7,7 +7,6 @@ import { subSelect as SubSelect } from "./sub-select";
 import { subButtons as SubButtons } from "./sub-buttons";
 import { yearSlider as YearSlider } from "./year-slider";
 import { mapRange as MapRange } from "./map-range";
-import { collapsableSelect as CollapsableSelect }  from "./collapsable-select";
 
 export const mainCard = {
   components:  {
@@ -18,8 +17,7 @@ export const mainCard = {
     SubSelect,
     SubButtons,
     YearSlider,
-    MapRange,
-    CollapsableSelect
+    MapRange
   },
   props: {
     tab: {
@@ -58,9 +56,6 @@ export const mainCard = {
             <div style="width: 100%;">
               <Map :api='api' @map-change="handleMapChange" />
               <YearSlider />
-            </div>
-            <div style="width: 40%;">
-              <CollapsableSelect />
             </div>
           </div>
         </template>

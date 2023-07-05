@@ -211,8 +211,8 @@ export class MapChart {
 
   getColor(percentage) {
     const colors = [
-      { r: 167, g: 97, b: 0 },
-      { r: 250, g: 213, b: 137 },
+      { r: 231, g: 94, b: 34 },
+      { r: 243, g: 174, b: 165 },
       { r: 209, g: 218, b: 246 },
       { r: 22, g: 45, b: 102 }
     ];
@@ -262,7 +262,22 @@ export class MapChart {
               <div class="mct-legend-middle">50%</div>
               <div class="mct-legend-top">100%</div>
             </div>
-            <div class="mct-legend__gradient"></div>
+            <div>
+            <div class="mct-legend__gradient">
+              <div class="mct-legend__gradient-box">
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+                <div class="mct-legend__gradient-box-content"></div>
+              </div>
+            </div>
+            </div>
           </div>
         </div>
       </section>

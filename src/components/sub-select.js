@@ -48,45 +48,46 @@ export const subSelect = {
         <n-select
           v-model:value="sick"
           :options="sicks"
-          class="select"
           style="width: 200px"
+          max-tag-count="responsive"
           placeholder="Selecione doença"
+          multiple
         />
       </n-form-item>
       <n-form-item label="Tipo de dado">
         <n-select
           v-model:value="type"
           :options="types"
-          class="select"
           style="width: 200px"
           placeholder="Selecione Tipo de dado"
+          multiple
         />
       </n-form-item>
       <n-form-item label="Estados">
         <n-select
           v-model:value="local"
           :options="locals"
-          class="select"
           style="width: 200px"
           placeholder="Selecione Estado"
+          multiple
         />
       </n-form-item>
       <n-form-item label="Abrangência temporal">
         <n-select
           v-model:value="period"
           :options="periods"
-          class="select"
           style="width: 200px"
           placeholder="Selecione Abrangência"
+          multiple
         />
       </n-form-item>
       <n-form-item label="Grânularidade">
         <n-select
           v-model:value="granurality"
           :options="granuralities"
-          class="select"
           style="width: 200px"
           placeholder="Selecione Grânularidade"
+          multiple
         />
       </n-form-item>
     </section>
