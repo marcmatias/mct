@@ -27,7 +27,6 @@ export const chart = {
     const optionsAcronym = ref(null);
     const valueAcronym = ref(null);
     const optionsSicksDisabled = ref(false);
-    const chartElement = ref(null);
 
     const setAcronymOptions = async () => {
       let acronyms = await api.request("statesAcronym");
@@ -50,7 +49,6 @@ export const chart = {
         valueSick.value = null;
         optionsSicksDisabled.value = true;
       }
-
     }
 
     let chart = null;
@@ -68,88 +66,92 @@ export const chart = {
         return;
       }
 
-      const ctx = document.querySelector("#chart").getContext('2d');
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              display: false,
-              ticks: {
-                color: "rgba(127,127,127, 1)",
-                padding: 20,
-                font: {
-                  size: 14,
+      try {
+        const ctx = document.querySelector("#chart").getContext('2d');
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels,
+            datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                display: false,
+                ticks: {
+                  color: "rgba(127,127,127, 1)",
+                  padding: 20,
+                  font: {
+                    size: 14,
+                  }
+                }
+              },
+              y: {
+                suggestedMin: 0,
+                suggestedMax: 100,
+                border: {
+                  display: false,
+                },
+                grid: {
+                  color: "rgba(127,127,127, .2)",
+                },
+                ticks: {
+                  callback: function(value) {
+                    return value + " %";
+                  },
+                  color: "rgba(127,127,127, 1)",
+                  padding: 20,
+                  font: {
+                    size: 14,
+                  }
                 }
               }
             },
-            y: {
-              suggestedMin: 0,
-              suggestedMax: 100,
-              border: {
+            layout: {
+              padding: {
+                bottom: 20
+              }
+            },
+            plugins: {
+              legend: {
                 display: false,
               },
-              grid: {
-                color: "rgba(127,127,127, .2)",
-              },
-              ticks: {
-                callback: function(value) {
-                  return value + " %";
+              datalabels: {
+                formatter: function(value, context) {
+                  if (context.dataIndex === context.dataset.data.length - 1) {
+                    return `${context.dataset.label}\n${value}%`;
+                  } else {
+                    return null;
+                  }
                 },
-                color: "rgba(127,127,127, 1)",
-                padding: 20,
                 font: {
-                  size: 14,
-                }
+                  weight: 'bold'
+                },
+                align: 'end',
+                offset: 4,
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderRadius: 4,
+                textAlign: 'center',
+                color: function(context) {
+                  return context.dataset.backgroundColor;
+                },
               }
-            }
-          },
-          layout: {
-            padding: {
-              bottom: 20
-            }
-          },
-          plugins: {
-            legend: {
-              display: false,
             },
-            datalabels: {
-              formatter: function(value, context) {
-                if (context.dataIndex === context.dataset.data.length - 1) {
-                  return `${context.dataset.label}\n${value}%`;
-                } else {
-                  return null;
-                }
-              },
-              font: {
-                weight: 'bold'
-              },
-              align: 'end',
-              offset: 4,
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              borderRadius: 4,
-              textAlign: 'center',
-              color: function(context) {
-                return context.dataset.backgroundColor;
-              },
-            }
-          },
-          layout: {
-            padding: {
-              right: 40
-            }
-          },
-        }
-      });
+            layout: {
+              padding: {
+                right: 40
+              }
+            },
+          }
+        });
+      } catch (e) {
+        // Do nothing
+      }
     }
 
-    onMounted(async() => {
+    onMounted(async () => {
       await setAcronymOptions();
       await setSicksOptions(true);
       await setChartData();
@@ -159,6 +161,7 @@ export const chart = {
       valueSick.value = e;
       await setChartData();
     }
+
     const setChartData = async () => {
       let results = [];
       const sicks = valueSick.value;
@@ -243,13 +246,12 @@ export const chart = {
       optionsAcronym,
       valueAcronym,
       handleUpdateValueAcronym,
-      chartDefined,
-      chartElement
+      chartDefined
     };
   },
   template: `
     <div class="mct-canva mct-canva--chart">
-      <canvas ref="chartElement" :class="chartDefined ? '' : 'element-hidden'" id="chart"></canvas>
+      <canvas :class="chartDefined ? '' : 'element-hidden'" id="chart"></canvas>
       <n-empty :class="chartDefined ? 'element-hidden' : ''" style="justify-content: center"></n-empty>
     </div>
   `

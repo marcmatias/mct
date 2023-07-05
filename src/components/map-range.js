@@ -67,19 +67,12 @@ export const mapRange = {
     }
 
     const showTooltip = (evt, text, value) => {
-      let compensateLeft = 60;
-      let compensateTop = 120;
-
-      if (window.innerWidth < "800") {
-        compensateLeft = -10;
-        compensateTop = 110;
-      }
       const tooltip = document.querySelector(".tooltip");
       tooltip.innerHTML = `<span class="mct-tooltip__title">${text}</span> <br>
           <span class="mct-tooltip__result">${value}</span>`;
       tooltip.style.display = "block";
-      tooltip.style.left = evt.pageX - compensateLeft + 'px';
-      tooltip.style.top = evt.pageY - compensateTop + 'px';
+      tooltip.style.left = (evt.clientX + 20) + 'px';
+      tooltip.style.top = (evt.clientY - 30) + 'px';
     }
 
     const hideTooltip = () => {

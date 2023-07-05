@@ -52,6 +52,7 @@ export const map = {
       const mapElement = document.querySelector('#map');
       await setSicksOptions(enableFields);
       const acronym = valueAcronym.value;
+      // TODO: Update to use local data
       if (acronym == "BR") {
         const map =
           await queryMap(
@@ -60,10 +61,15 @@ export const map = {
         const datasetStates = await api.request(valueSick.value);
         setYearsOptions(Object.keys(datasetStates).map(x => x).sort());
         const states = await api.request("statesAcronym");
-        renderMap({ element: mapElement, map, datasetStates: datasetStates[valueYear.value], states });
+        try {
+          renderMap({ element: mapElement, map, datasetStates: datasetStates[valueYear.value], states });
+        } catch (e) {
+          // Do Nothing
+        }
         return;
       }
 
+      // TODO: Update to use local data
       const map = await queryMap(
         `https://servicodados.ibge.gov.br/api/v3/malhas/estados/${acronym}?formato=image/svg+xml&qualidade=intermediaria&intrarregiao=municipio`
       );

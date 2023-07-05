@@ -93,7 +93,7 @@
 
 .mct-tooltip {
   display: none;
-  position: absolute;
+  position: fixed;
   opacity: 95%;
   background-color: var(--primary-color);
   border-radius: 5px;

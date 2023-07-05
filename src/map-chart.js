@@ -95,34 +95,8 @@ export class MapChart {
   }
 
   tooltipPosition(event, tooltip) {
-    let compensateLeft = 100;
-    let compensateTop = 250;
-
-    if (window.innerWidth < "800") {
-      compensateLeft = 10;
-      compensateTop = 350;
-    }
-
-    let tooltipLeft = event.clientX - compensateLeft + window.scrollX;
-    let tooltipTop = event.clientY - compensateTop + window.scrollY;
-
-    let tooltipWidth = tooltip.offsetWidth + 40;
-    let tooltipHeight = tooltip.offsetHeight + 40;
-    let windowWidth = window.innerWidth;
-    let windowHeight = window.innerHeight;
-
-    let tooltipOutsideRight = tooltipLeft + tooltipWidth > windowWidth;
-    let tooltipOutsideBottom = tooltipTop + tooltipHeight > windowHeight;
-
-    if (tooltipOutsideRight) {
-      tooltipLeft = event.clientX - tooltipWidth - "60" + window.scrollX;
-    }
-    if (tooltipOutsideBottom) {
-      tooltipTop = event.clientY - tooltipHeight - "60" + window.scrollY;
-    }
-
-    tooltip.style.left = tooltipLeft + "px";
-    tooltip.style.top = tooltipTop + "px";
+    tooltip.style.left = (event.clientX + 20)+ "px";
+    tooltip.style.top = (event.clientY + 20) + "px";
   }
 
   findElement(arr, name) {
