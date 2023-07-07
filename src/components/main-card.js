@@ -1,12 +1,12 @@
 import { NCard } from "naive-ui";
 import { ref } from "vue/dist/vue.esm-bundler";
 import { chart as Chart } from "./chart";
-import { map as Map } from "./map";
+import { map as Map } from "./map/map";
 import { table as Table } from "./table";
 import { subSelect as SubSelect } from "./sub-select";
 import { subButtons as SubButtons } from "./sub-buttons";
-import { yearSlider as YearSlider } from "./year-slider";
-import { mapRange as MapRange } from "./map-range";
+import { yearSlider as YearSlider } from "./map/year-slider";
+import { mapRange as MapRange } from "./map/map-range";
 
 export const mainCard = {
   components:  {

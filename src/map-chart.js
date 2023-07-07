@@ -239,16 +239,7 @@ export class MapChart {
             <div>
             <div class="mct-legend__gradient">
               <div class="mct-legend__gradient-box">
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
-                <div class="mct-legend__gradient-box-content"></div>
+                ${ Array(10).fill(0).map(x => "<div class='mct-legend__gradient-box-content'></div>" ).join("")}
               </div>
             </div>
             </div>

@@ -1,5 +1,5 @@
-import { DataFetcher } from "../data-fetcher";
-import { MapChart } from "../map-chart";
+import { DataFetcher } from "../../data-fetcher";
+import { MapChart } from "../../map-chart";
 import { ref, onMounted, toRaw } from "vue/dist/vue.esm-bundler";
 import { NSelect, NSpin, NButton, NFormItem } from "naive-ui";
 
