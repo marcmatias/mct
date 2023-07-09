@@ -21,11 +21,13 @@ export const table = {
     const columns = ref([]);
     const optionsSick = ref(null);
     const valueSick = ref(null);
-    const optionsState = ref([null, 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'].map((state) =>  { return { label: state, value: state } } ));
+    const optionsState = ref(
+      [null, 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'].map(
+        (state) =>  { return { label: state, value: state } } )
+    );
     const valueState = ref(null);
 
     onMounted(async () => {
-      loading.value = false;
 
       let sicks = [];
       sicks = await api.request("options");
@@ -33,6 +35,7 @@ export const table = {
       valueSick.value = valueSick.value && sicks.result.includes(valueSick.value) ? valueSick.value : sicks.result[0];
 
       await setTableData();
+      loading.value = false;
     });
 
     const setTableData = async () => {

@@ -1,7 +1,7 @@
 import { DataFetcher } from "../data-fetcher";
 import { ref, onMounted } from "vue/dist/vue.esm-bundler";
 import { colors } from "../utils";
-import { NSelect, NEmpty } from "naive-ui";
+import { NSelect, NEmpty, NSpin } from "naive-ui";
 import { Chart, LineController, LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Legend } from 'chartjs';
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
@@ -11,7 +11,8 @@ Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearS
 export const chart = {
   components: {
     NSelect,
-    NEmpty
+    NEmpty,
+    NSpin
   },
   props: {
     api: {
@@ -22,6 +23,7 @@ export const chart = {
   setup(props) {
     const api = new DataFetcher(props.api);
     const chartDefined = ref(true);
+    const loading = ref(true);
     const optionsSick = ref(null);
     const valueSick = ref(null);
     const optionsAcronym = ref(null);
@@ -163,6 +165,7 @@ export const chart = {
     }
 
     const setChartData = async () => {
+      loading.value = false;
       let results = [];
       const sicks = valueSick.value;
       if(!sicks.length) {
@@ -246,13 +249,16 @@ export const chart = {
       optionsAcronym,
       valueAcronym,
       handleUpdateValueAcronym,
-      chartDefined
+      chartDefined,
+      loading
     };
   },
   template: `
-    <div class="mct-canva mct-canva--chart">
-      <canvas :class="chartDefined ? '' : 'element-hidden'" id="chart"></canvas>
-      <n-empty :class="chartDefined ? 'element-hidden' : ''" style="justify-content: center"></n-empty>
-    </div>
+    <n-spin :show="loading">
+      <div class="mct-canva mct-canva--chart">
+        <canvas :class="chartDefined ? '' : 'element-hidden'" id="chart"></canvas>
+        <n-empty :class="chartDefined ? 'element-hidden' : ''" style="justify-content: center"></n-empty>
+      </div>
+    </n-spin>
   `
 };

@@ -5,7 +5,8 @@ import { config as Config } from "./components/config";
 import { mainCard as MainCard } from "./components/main-card";
 import { NTabs, NTabPane, NTab } from "naive-ui";
 
-export default class Dashboard {
+
+export default class MCT {
   constructor(api) {
     this.api = api;
     this.render();
@@ -17,14 +18,19 @@ export default class Dashboard {
       components: { NTabs, NTabPane, NTab, Config, MainCard },
       setup() {
         const tab = ref("map");
+        const tabBy = ref("bySick");
+        const mainTitle = ref("Cobertura Vacinal de Poliomielite, Brasil, Janeiro de 2023");
+
+        const handleUpdateValueTabBy = (tabByName) => {
+          tabBy.value = tabByName;
+        };
         const handleUpdateValueTab = (tabName) => {
           tab.value = tabName;
         };
-        const handleUpdateValueTabBy = (tabName) => {
-          console.log(tabName);
-        };
         return {
           tab,
+          tabBy,
+          mainTitle,
           api: self.api,
           handleUpdateValueTab,
           handleUpdateValueTabBy
@@ -34,7 +40,7 @@ export default class Dashboard {
         <Config>
           <main class="main">
             <section class="main-header">
-              <h1 style="margin:0px; color: #e96f5f">Vacinas</h1>
+              <h1 style="margin:0px; color: #e96f5f">VacinasBR</h1>
               <div style="display:flex; gap: 32px; overflow: auto">
                 <n-tabs type="segment" @update:value="handleUpdateValueTabBy">
                   <n-tab name="bySick" tab="Por doença" />
@@ -48,7 +54,7 @@ export default class Dashboard {
               </div>
             </section>
             <div>
-              <MainCard :tab="tab" :api='api' />
+              <MainCard :api="api" :main-title="mainTitle" :tab-by="tabBy" :tab="tab" />
             </div>
           </main>
         </Config>

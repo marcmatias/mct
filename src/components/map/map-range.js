@@ -5,20 +5,20 @@ export const mapRange = {
   components:  { NCard },
   props: {
     mapData: {
-      type: Array,
-      required: true
+      type: Object,
+    },
+    // TODO: Map hover show svg tooltips
+    mapDataHover: {
+      type: String
     },
   },
   setup(props) {
     const datasetValues = ref([]);
+    const mapRangeSVG = ref(null);
 
-    const handleMapChange = (data) => {
-      const svg = document.querySelector('#mapRangeSVG');
-      if(!data.length || !svg) { return; }
-
-      svg.setAttribute("height", 0);
+    const drawLine = (svg) => {
+      svg.setAttribute("height", 0)
       svg.setAttribute("height", svg.parentNode.offsetHeight - 70);
-
       const line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
       line.setAttribute("x1",20);
       line.setAttribute("y1", 0);
@@ -27,9 +27,27 @@ export const mapRange = {
       line.setAttribute("stroke", "#ccc");
       line.setAttribute("stroke-width", "0.6");
       svg.appendChild(line);
+    }
 
-      const circles = document.querySelectorAll("circle");
-      circles.forEach(circle => circle.parentNode.removeChild(circle));
+    const clearCircles = () => {
+      const mapRange = document.querySelector("#map-range");
+      const circles = mapRange.querySelectorAll("circle");
+      if (circles) {
+        circles.forEach(circle => circle.parentNode.removeChild(circle));
+      }
+    }
+
+    const handleMapChange = (data) => {
+      const svg = mapRangeSVG.value;
+      if (!svg) {
+        return;
+      }
+      drawLine(svg);
+      clearCircles();
+      if(!data || !data.length) {
+        return;
+      }
+
       const svgHeight = svg.getAttribute("height");
       for (let i = 0; i < data.length; i++) {
         const samePercentCircle = [...svg.querySelectorAll("circle")].find(x => x.dataset.value === data[i].data + "%");
@@ -93,14 +111,20 @@ export const mapRange = {
       handleMapChange(datasetValues.value);
     };
     window.addEventListener('resize', getWindowWidth);
+
+    return {
+      mapRangeSVG,
+      mapRange
+    }
   },
   template: `
     <n-card
+      id="map-range"
       style="max-width: 40px"
       content-style="padding: 0px; display: flex; flex-direction: column; align-items: center; gap: 12px; font-size: 12px;"
     >
       <span style="padding: 12px 0px 0px">100%</span>
-      <svg id="mapRangeSVG" width="40" style="overflow: visible"></svg>
+      <svg ref="mapRangeSVG" width="40" style="overflow: visible"></svg>
       <span style="padding: 0px 0px 12px">0%</span>
     </n-card>
     <div class="tooltip mct-tooltip"></div>

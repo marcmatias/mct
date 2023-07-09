@@ -223,30 +223,32 @@ export class MapChart {
     const self = this;
 
     const map = `
-      <section class="mct__canva-section">
-        <div id="canvas" class="mct-canva">
-          <div class="spinner-container">
-            <div id="spinner" class="spinner"></div>
-          </div>
-        </div>
-        <div class="mct-legend">
-          <div style="display:flex; flex-direction: column; gap: 4px;">
-            <div class="mct-legend__content">
-              <div class="mct-legend-base">0%</div>
-              <div class="mct-legend-middle">50%</div>
-              <div class="mct-legend-top">100%</div>
+      <section>
+        <div class="mct__canva-section">
+          <div id="canvas" class="mct-canva">
+            <div class="spinner-container">
+              <div id="spinner" class="spinner"></div>
             </div>
-            <div>
-            <div class="mct-legend__gradient">
-              <div class="mct-legend__gradient-box">
-                ${ Array(10).fill(0).map(x => "<div class='mct-legend__gradient-box-content'></div>" ).join("")}
+          </div>
+          <div class="mct-legend">
+            <div style="display:flex; flex-direction: column; gap: 4px;">
+              <div class="mct-legend__content">
+                <div class="mct-legend-base">0%</div>
+                <div class="mct-legend-middle">50%</div>
+                <div class="mct-legend-top">100%</div>
+              </div>
+              <div>
+              <div class="mct-legend__gradient">
+                <div class="mct-legend__gradient-box">
+                  ${ Array(10).fill(0).map(x => "<div class='mct-legend__gradient-box-content'></div>" ).join("")}
+                </div>
+              </div>
               </div>
             </div>
-            </div>
           </div>
         </div>
+        <div class="mct-tooltip"></div>
       </section>
-      <div class="mct-tooltip"></div>
     `;
 
     self.element.innerHTML = map;
