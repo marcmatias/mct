@@ -55,6 +55,7 @@
   width: 149px;
   height: 13px;
   position: relative;
+  margin: auto;
   background: linear-gradient(
     90deg,
     rgb(231, 94, 35),
@@ -79,14 +80,26 @@
   border: 1px solid white;
 }
 
-.mct-legend__content {
+.mct-legend__content-box {
   display: flex;
   gap: 42px;
   justify-content: space-between;
-  padding: 0px 3px;
+  padding: 0px;
   font-size: .6rem;
   text-shadow: var(--text-shadow);
   color: #1E1E1E;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.mct-legend__content {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+}
+
+.mct-legend-base {
+  margin-right: 16px;
 }
 
 /* Tooltip map */

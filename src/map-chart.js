@@ -7,6 +7,8 @@ export class MapChart {
     cities,
     datasetStates,
     states,
+    statesSelected,
+    tooltipAction
   }) {
     this.element = typeof element === "string" ?
       element.querySelector(element) : element;
@@ -15,11 +17,13 @@ export class MapChart {
     this.cities = cities;
     this.datasetStates = datasetStates;
     this.states = states;
+    this.statesSelected = statesSelected;
+    this.tooltipAction = tooltipAction;
 
-    this.init();
+    this.start();
   }
 
-  init() {
+  start() {
     const self = this;
 
     if (self.datasetCities) {
@@ -32,6 +36,16 @@ export class MapChart {
     self.loadMapNation();
   }
 
+  update({ map, datasetCities, cities, datasetStates, states, statesSelected }) {
+    this.map = map;
+    this.datasetCities = datasetCities;
+    this.cities = cities;
+    this.datasetStates = datasetStates;
+    this.states = states;
+    this.statesSelected = statesSelected;
+    this.start();
+  }
+
   applyMap(map) {
     const self = this;
 
@@ -39,7 +53,8 @@ export class MapChart {
     svgContainer.innerHTML = map;
     for (const path of svgContainer.querySelectorAll('path')) {
       path.style.stroke = "white";
-      path.setAttribute("stroke-width", "800px");
+      path.setAttribute("stroke-width", "1px");
+      path.setAttribute("vector-effect", "non-scaling-stroke");
     }
 
     const svgElement = svgContainer.querySelector("svg");
@@ -56,6 +71,7 @@ export class MapChart {
     } = {}
   ) {
     const self = this;
+
     // Querying map country states setting eventListener
     for (const path of self.element.querySelectorAll('#canvas svg path')) {
       const content = contentData ? contentData[path.id] : [];
@@ -83,15 +99,24 @@ export class MapChart {
           </article>`;
         tooltip.style.display = "block";
         self.tooltipPosition(event, tooltip);
+        self.runTooltipAction(true, content.name);
       });
       path.addEventListener("mouseleave", () => {
         path.style.fill = resultColor;
         path.style.stroke = "white";
         tooltip.style.display = "none";
+        self.runTooltipAction(false, content.name);
       });
 
       path.style.fill = resultColor;
     };
+  }
+
+  runTooltipAction(opened, name) {
+    if (!this.tooltipAction) {
+      return;
+    }
+    this.tooltipAction(opened, name);
   }
 
   tooltipPosition(event, tooltip) {
@@ -139,14 +164,14 @@ export class MapChart {
             return {
               label: key,
               data: val,
-              name: Object.values(self.cities).find(item => item.acronym === key).name,
+              name: Object.values(self.cities).find(item => item.name === key).name,
               color: self.getColor(val),
             }
           }
         );
-      self.datasetValues = result;
     }
 
+    self.datasetValues = result;
     self.applyMap(self.map);
 
     self.setData({
@@ -172,9 +197,10 @@ export class MapChart {
               color: self.getColor(val),
             }
           }
-        );
-      self.datasetValues = result;
+        ).filter(x => self.statesSelected.includes(x.label));
     }
+
+    self.datasetValues = result;
 
     self.applyMap(self.map);
     self.setData({
@@ -231,18 +257,22 @@ export class MapChart {
             </div>
           </div>
           <div class="mct-legend">
-            <div style="display:flex; flex-direction: column; gap: 4px;">
-              <div class="mct-legend__content">
-                <div class="mct-legend-base">0%</div>
-                <div class="mct-legend-middle">50%</div>
-                <div class="mct-legend-top">100%</div>
-              </div>
-              <div>
-              <div class="mct-legend__gradient">
-                <div class="mct-legend__gradient-box">
-                  ${ Array(10).fill(0).map(x => "<div class='mct-legend__gradient-box-content'></div>" ).join("")}
+            <div>
+              <div class="mct-legend__content-box">
+                <div class="mct-legend__content">
+                  <div class="mct-legend-base">0%</div>
+                  <div class="mct-legend-middle">50%</div>
+                  <div class="mct-legend-top">100%</div>
                 </div>
               </div>
+              <div class="mct-legend__box-gradient">
+                <div class="mct-legend__gradient">
+                  <div class="mct-legend__gradient-box">
+                    ${ Array(10).fill(0).map((x, i) =>
+                      "<div class='mct-legend__gradient-box-content " + "mct-legend-box-"+ i +"'></div>" ).join("")
+                      }
+                  </div>
+                </div>
               </div>
             </div>
           </div>

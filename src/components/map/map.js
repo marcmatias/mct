@@ -1,6 +1,6 @@
 import { DataFetcher } from "../../data-fetcher";
 import { MapChart } from "../../map-chart";
-import { ref, onMounted, toRaw, watch } from "vue/dist/vue.esm-bundler";
+import { ref, onMounted, watch } from "vue/dist/vue.esm-bundler";
 import { NSelect, NSpin, NButton, NFormItem } from "naive-ui";
 
 export const map = {
@@ -24,6 +24,7 @@ export const map = {
     const api = new DataFetcher(props.api);
     const loading = ref(true);
     const yearMapElement = ref(null);
+    const mapChart = ref(null);
 
     const queryMap = async (mapUrl) => {
       const svg = await fetch(mapUrl);
@@ -32,12 +33,17 @@ export const map = {
     };
 
     const renderMap = (args) => {
-      const mapChart = new MapChart({
-        ...args,
-        legendTitle: "Porcentagem de contaminação da população brasileira.",
-        legendSource: "IBGE 2023"
-      });
-      emit("mapChange", mapChart.datasetValues);
+      if (!mapChart.value) {
+        mapChart.value = new MapChart({
+          ...args,
+          tooltipAction: (opened, name) => {
+            emit("mapTooltip", { opened, name });
+          }
+        });
+      } else {
+        mapChart.value.update({ ...args });
+      }
+      emit("mapChange", mapChart.value.datasetValues);
     }
 
     const setMap = async () => {
@@ -48,7 +54,7 @@ export const map = {
       const mapElement = document.querySelector('#map');
 
       // TODO: Update to use local data
-      if (!local || local == "BR") {
+      if (!local.length || local.length > 1) {
         const map =
           await queryMap(
             'https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?formato=image/svg+xml&qualidade=intermediaria&intrarregiao=UF'
@@ -57,7 +63,7 @@ export const map = {
         if (sick) {
           const datasetStates = await api.request(sick);
           const states = await api.request("statesAcronym");
-          renderMap({ element: mapElement, map, datasetStates: datasetStates[period], states });
+          renderMap({ element: mapElement, map, datasetStates: datasetStates[period], states, statesSelected: local });
           return;
         }
 
@@ -76,7 +82,7 @@ export const map = {
         const datasetCities = await api.requestState(local + "/" + sick);
         const cities = await api.requestState(local + "/" + "citiesAcronym");
         renderMap({ element: mapElement, map, datasetCities: datasetCities[period], cities });
-      } catch {
+      } catch (e) {
         renderMap({ element: mapElement, map });
       }
     }

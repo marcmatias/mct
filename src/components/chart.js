@@ -1,5 +1,5 @@
 import { DataFetcher } from "../data-fetcher";
-import { ref, onMounted } from "vue/dist/vue.esm-bundler";
+import { ref, onMounted, watch, computed } from "vue/dist/vue.esm-bundler";
 import { colors } from "../utils";
 import { NSelect, NEmpty, NSpin } from "naive-ui";
 import { Chart, LineController, LineElement, PointElement, LinearScale, Tooltip, CategoryScale, Legend } from 'chartjs';
@@ -19,39 +19,17 @@ export const chart = {
       type: String,
       required: true
     },
+    form: {
+      type: Object,
+    },
   },
   setup(props) {
     const api = new DataFetcher(props.api);
     const chartDefined = ref(true);
     const loading = ref(true);
-    const optionsSick = ref(null);
-    const valueSick = ref(null);
-    const optionsAcronym = ref(null);
-    const valueAcronym = ref(null);
-    const optionsSicksDisabled = ref(false);
-
-    const setAcronymOptions = async () => {
-      let acronyms = await api.request("statesAcronym");
-      acronyms = Object.values(acronyms).map(x => x.acronym).sort();
-      optionsAcronym.value = acronyms.map((acronym) =>  { return { label: acronym, value: acronym } } );
-      valueAcronym.value = acronyms[0];
-    }
-
-    const setSicksOptions = async (setDefaultValue = false) => {
-      let sicks = [];
-      try {
-        sicks = await api.request("options");
-        optionsSicksDisabled.value = false;
-        optionsSick.value = sicks.result.map((sick) =>  { return { label: sick, value: sick } } );
-        valueSick.value = null;
-        if (setDefaultValue) {
-          valueSick.value = [sicks.result[0]];
-        }
-      } catch {
-        valueSick.value = null;
-        optionsSicksDisabled.value = true;
-      }
-    }
+    const valueSick = computed(() => props.form.sick);
+    const valueAcronym = computed(() => props.form.local);
+    const valuePeriod = computed(() => props.form.period);
 
     let chart = null;
     const renderChart = (labels, datasets) => {
@@ -153,21 +131,15 @@ export const chart = {
       }
     }
 
-    onMounted(async () => {
-      await setAcronymOptions();
-      await setSicksOptions(true);
-      await setChartData();
-    });
-
-    const handleUpdateValueSick = async (e) => {
-      valueSick.value = e;
-      await setChartData();
-    }
-
     const setChartData = async () => {
       loading.value = false;
+
       let results = [];
-      const sicks = valueSick.value;
+      let sicks = valueSick.value;
+      let period = valuePeriod.value;
+      if (!sicks) {
+        return;
+      }
       if(!sicks.length) {
         renderChart();
         return;
@@ -175,21 +147,9 @@ export const chart = {
 
       results = await api.request(sicks);
 
-      if (sicks.length === 1) {
-        const color = colors[0];
-        renderChart(
-          Object.keys(results),
-          [
-            {
-              label: sicks,
-              data: Object.values(results).map(state => state[valueAcronym.value]) ,
-              backgroundColor: color,
-              borderColor: color,
-              borderWidth: 2,
-            }
-          ]
-        )
-        return;
+      if (!Array.isArray(sicks)) {
+        results = { [sicks]: results }
+        sicks = [sicks];
       }
 
       const allYears = [];
@@ -199,7 +159,7 @@ export const chart = {
       const years = [...new Set(allYears)].sort();
 
       const result = {};
-      for(let sick of sicks) {
+      for(let sick of [sicks]) {
         for (let year of years) {
           if (result[sick]) {
             if (results[sick][year]) {
@@ -237,18 +197,20 @@ export const chart = {
 
     }
 
-    const handleUpdateValueAcronym = async (e) => {
-      valueAcronym.value = e;
+    onMounted(async () => {
       await setChartData();
-    }
+    });
+
+    watch(
+      () => [props.form.local, props.form.sick, props.form.period],
+      async () => {
+        await setChartData();
+      }
+    )
+
     return {
-      optionsSick,
       valueSick,
-      optionsSicksDisabled,
-      handleUpdateValueSick,
-      optionsAcronym,
       valueAcronym,
-      handleUpdateValueAcronym,
       chartDefined,
       loading
     };

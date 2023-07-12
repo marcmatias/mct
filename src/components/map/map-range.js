@@ -1,4 +1,4 @@
-import { ref, onMounted, watchEffect } from "vue/dist/vue.esm-bundler";
+import { ref, onMounted, watchEffect, watch } from "vue/dist/vue.esm-bundler";
 import { NCard } from "naive-ui";
 
 export const mapRange = {
@@ -7,7 +7,12 @@ export const mapRange = {
     mapData: {
       type: Object,
     },
-    // TODO: Map hover show svg tooltips
+    mapTooltip: {
+      type: Object,
+    },
+    tooltipAction: {
+      type: Object,
+    },
     mapDataHover: {
       type: String
     },
@@ -64,6 +69,8 @@ export const mapRange = {
         circle.setAttribute("data-title", data[i].name);
         circle.setAttribute("data-value", data[i].data + "%");
         circle.setAttribute("opacity", 0.8);
+        circle.setAttribute("stroke", "#aaa");
+        circle.setAttribute("stroke-width", "0.4");
         svg.appendChild(circle);
       }
 
@@ -81,6 +88,10 @@ export const mapRange = {
       svg.addEventListener("mouseleave", () => {
         hideTooltip();
       });
+
+      document.addEventListener("tooltipMapOpened", (e) => {
+        console.log("tooltipOpened", e.detail.name)
+      })
 
     }
 
@@ -106,6 +117,29 @@ export const mapRange = {
       datasetValues.value = props.mapData;
       handleMapChange(datasetValues.value);
     });
+
+    watch(
+      () => props.mapTooltip,
+      () => {
+        const circle = document.querySelector(`[data-title="${props.mapTooltip.name}"]`)
+        if (!circle) {
+          return;
+        }
+
+        if (props.mapTooltip.opened) {
+          const parentElement = circle.parentNode;
+          parentElement.appendChild(circle);
+          circle.setAttribute("r", 9);
+          circle.setAttribute("opacity", 1);
+          circle.setAttribute("stroke", "#7a7a7a");
+          return;
+        } 
+
+        circle.setAttribute("r",6);
+        circle.setAttribute("opacity", 0.8);
+        circle.setAttribute("stroke", "#aaa");
+      }
+    )
 
     const getWindowWidth = () => {
       handleMapChange(datasetValues.value);

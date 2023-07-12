@@ -23,7 +23,11 @@ export const yearSlider = {
     const stopPlayMap = ref(false);
     const setSliderValue = (periods, i) => {
       if (Array.isArray(periods)) {
-        showSlider.value = true;
+        if(periods[0] !== periods[1]) {
+          showSlider.value = true;
+        } else {
+          showSlider.value = false;
+        }
         return timestampToYear(periods[i])
       }
       showSlider.value = false;

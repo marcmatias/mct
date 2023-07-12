@@ -1,11 +1,7 @@
-import { NSelect, NFormItem, NDatePicker } from "naive-ui";
+import { ref } from "vue/dist/vue.esm-bundler";
+import { NSelect, NFormItem, NDatePicker, NButton } from "naive-ui";
 
 export const subSelect = {
-  components:  {
-    NSelect,
-    NFormItem,
-    NDatePicker
-  },
   props: {
     api: {
       type: String,
@@ -24,9 +20,47 @@ export const subSelect = {
       required: true,
     }
   },
-  // Popular selects com options vindos da api
-  // Se usuário muda para imunizante atualiza dados buscando de imunizantes nos selects necessários
-  // Se usuário muda para gráfico ou para tabela ou volta para mapa, tipo de select muda para alguns casos pode ser multi ou simples
+  components:  {
+    NSelect,
+    NFormItem,
+    NDatePicker,
+    NButton
+  },
+  setup (props) {
+    const local = ref(null);
+    const showingLocalsOptions = ref(null);
+    const selectAll = (options) => {
+      const allOptions = options.map((option) => option.value)
+      const selectLength = Array.isArray(local.value) ? local.value.length : null
+      if (selectLength == allOptions.length) {
+        local.value = [];
+        return;
+      }
+
+      local.value = allOptions;
+    }
+
+    const handleLocalsUpdateShow = (show) => {
+      showingLocalsOptions.value = show;
+
+      if (!showingLocalsOptions.value && local.value){
+        props.form.local = local.value;
+      }
+    };
+    const handleLocalsUpdateValue = (value) => {
+      local.value = value;
+      if (!showingLocalsOptions.value){
+        props.form.local = value;
+      }
+    };
+
+    return {
+      selectAll,
+      local,
+      handleLocalsUpdateShow,
+      handleLocalsUpdateValue,
+    }
+  },
   template: `
     <section style="display:flex; gap: 14px">
       <n-form-item label="Doença">
@@ -45,23 +79,34 @@ export const subSelect = {
           style="width: 200px"
           placeholder="Selecione Tipo de dado"
           multiple
+          disabled
         />
       </n-form-item>
       <n-form-item label="Estados">
         <n-select
-          v-model:value="form.local"
+          v-model:value="local"
           :options="form.locals"
           style="width: 200px"
           placeholder="Selecione Estado"
           multiple
-        />
+          filterable
+          max-tag-count="responsive"
+          :on-update:show="handleLocalsUpdateShow"
+          :on-update:value="handleLocalsUpdateValue"
+        >
+          <template #action>
+            <n-button @click="selectAll(form.locals, 'local')" tertiary>Selecionar todos</n-button>
+          </template>
+        </n-select>
       </n-form-item>
       <n-form-item label="Abrangência temporal" style="width: 200px">
         <n-date-picker
          :update-value-on-close="true"
          v-model:value="form.periods"
          type="yearrange"
-         clearable 
+         start-placeholder="Início"
+         end-placeholder="Final"
+         clearable
         />
       </n-form-item>
       <n-form-item label="Granularidade">
@@ -71,6 +116,7 @@ export const subSelect = {
           style="width: 200px"
           placeholder="Selecione Granularidade"
           multiple
+          disabled
         />
       </n-form-item>
     </section>

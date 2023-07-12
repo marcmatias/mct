@@ -1,5 +1,5 @@
 import { NCard } from "naive-ui";
-import { ref, computed, watch, onBeforeMount } from "vue/dist/vue.esm-bundler";
+import { ref, computed, onBeforeMount } from "vue/dist/vue.esm-bundler";
 import { chart as Chart } from "./chart";
 import { map as Map } from "./map/map";
 import { table as Table } from "./table";
@@ -8,6 +8,7 @@ import { subButtons as SubButtons } from "./sub-buttons";
 import { yearSlider as YearSlider } from "./map/year-slider";
 import { mapRange as MapRange } from "./map/map-range";
 import { DataFetcher } from "../data-fetcher";
+import { ufs } from "../exampleData";
 
 export const mainCard = {
   components:  {
@@ -38,13 +39,17 @@ export const mainCard = {
       required: true
     },
   },
-  emits: ['mapChange'],
   setup(props) {
     const mapData = ref([]);
+    const mapTooltip = ref([]);
     const mainTitle = computed(() => props.mainTitle);
 
     const handleMapChange = (datasetValues) => {
       mapData.value = datasetValues;
+    };
+
+    const handleMapTooltip = (tooltip) => {
+      mapTooltip.value = tooltip;
     };
 
     const api = new DataFetcher(props.api);
@@ -53,37 +58,37 @@ export const mainCard = {
         sick: null,
         sicks: [],
         type: null,
-        types: [{ label: 'Cobertura Vacinal', value: 'Cobertura Vacinal' }],
-        local: null,
-        locals: [{ label: 'Estados', value: 'Estados' }],
+        types: [],
+        local: [],
+        locals: [],
         period: null,
         periods: null,
         granurality: null,
-        granuralities: [{ label: 'Estados', value: 'Estados' }],
+        granuralities: [],
     });
 
     onBeforeMount(async () => {
-      const sicks = await api.request("options");
+      let [sicks, locals] = await Promise.all([
+        api.request("options"),
+        api.request("statesAcronym")
+      ]);
+      // Set sicks options
       form.value.sicks = sicks.result.map(x => { return { label: x, value: x } })
-
-      let locals = await api.request("statesAcronym");
+      // Set locals options
       locals = Object.values(form.value.locals).map(x => x.acronym).sort();
       locals.unshift("BR");
       locals.value = locals.map((local) =>  { return { label: local, value: local } } );
 
       // TODO: How years range will work
+      // TODO: Get states from API
+      form.value.locals = ufs;
     });
-
-    watch(
-      form.value,
-      () => {
-        // console.log(form.value)
-      }
-    )
 
     return {
       handleMapChange,
+      handleMapTooltip,
       mapData,
+      mapTooltip,
       mainTitle,
       form,
     };
@@ -93,7 +98,7 @@ export const mainCard = {
       <SubSelect
         :api="api"
         :tab="tab"
-        :tab-by="tabBy" 
+        :tab-by="tabBy"
         v-model:form="form"
       />
       <h2 style="margin: 0px; font-weight: 700">
@@ -105,21 +110,23 @@ export const mainCard = {
       <section>
         <template v-if="tab === 'map'">
           <div style="display: flex; gap: 12px">
-            <MapRange :mapData="mapData" />
+            <MapRange :mapData="mapData" :mapTooltip="mapTooltip" />
             <div style="width: 100%;">
               <Map
                 :form="form"
-                :api='api' @map-change="handleMapChange"
+                :api='api'
+                @map-change="handleMapChange"
+                @map-tooltip="handleMapTooltip"
               />
               <YearSlider :form="form" />
             </div>
           </div>
         </template>
         <template v-else-if="tab === 'chart'">
-          <Chart :api='api'/>
+          <Chart :api='api' :form="form" />
         </template>
         <template v-else>
-          <Table :api='api' />
+          <Table :api='api' :form="form" />
         </template>
       </section>
       <SubButtons />
